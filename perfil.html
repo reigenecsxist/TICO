@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - TICO</title>
+    <!-- Fonte Inter para um visual limpo e moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Esquerda -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="#" class="menu-item active">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-layer-group"></i> Meus Projetos <span class="badge-count">3</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-check-double"></i> Concluídos <span class="badge-count">1</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i> Eventos <span class="badge-count">2</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-medal"></i> Conquistas
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-regular fa-comments"></i> Mensagens <span class="badge-count">1</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <!-- Aqui entrará a logo do pássaro tico-tico no futuro -->
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior -->
+            <header class="topbar">
+                <h1>Perfil</h1>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar talentos ou projetos...">
+                    </div>
+                    <button class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+                </div>
+            </header>
+
+            <!-- Grid de Cards (Bento Grid) -->
+            <div class="dashboard-grid">
+                
+                <!-- Card 1: Informações do Usuário -->
+                <div class="card profile-card">
+                    <button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+                    <div class="profile-header">
+                        <div class="avatar">
+                            <img src="https://ui-avatars.com/api/?name=U+S&background=D46A4F&color=fff&size=120" alt="Avatar do Usuário">
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="user-name">Gabriel de Moura</h2>
+                            <span id="user-role">Desenvolver Fullstack</span>
+                            <p class="subtitle">Universidade Estadual de Goiás - UEG</p>
+                            
+                            <ul class="info-list">
+                                <li><strong>Ingresso no GAIO:</strong> Outubro de 2026</li>
+                                <li><strong>Especialidade:</strong> Engenharia de Software</li>
+                                <li><strong>Localização:</strong> Pires do Rio, GO</li>
+                                <li><strong>Email:</strong> contato.academico@ueg.br</li>
+                            </ul>
+
+                            <div class="social-links">
+                                <a href="#"><i class="fa-brands fa-github"></i></a>
+                                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                                <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Habilidades (Adaptado do card de Pagamento) -->
+                <div class="card skills-card">
+                    <h3>Minhas Habilidades</h3>
+                    <p class="subtitle">Tags de pareamento em projetos</p>
+                    
+                    <div class="skills-container">
+                        <span class="skill-tag"><i class="fa-brands fa-java"></i> Java / Spring Boot</span>
+                        <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                        <span class="skill-tag"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</span>
+                        <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Histórico de Projetos (Adaptado da Timeline de Cursos) -->
+                <div class="card projects-card">
+                    <h3>Meus Projetos</h3>
+                    
+                    <div class="timeline">
+                        <!-- Projeto 1 -->
+                        <div class="timeline-item item-light-green">
+                            <div class="timeline-dot dot-green"></div>
+                            <div class="timeline-content">
+                                <div class="item-header">
+                                    <h4>Estufa Semi-Hidropônica Integrada</h4>
+                                    <span class="status-badge bg-green">Concluído</span>
+                                </div>
+                                <p>Estruturação de eucalipto e monitoramento de solo e irrigação.</p>
+                                <span class="meta-info">Equipe de 3 pessoas</span>
+                            </div>
+                            <button class="action-btn"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Projeto 2 -->
+                        <div class="timeline-item item-light-orange">
+                            <div class="timeline-dot dot-orange"></div>
+                            <div class="timeline-content">
+                                <div class="item-header">
+                                    <h4>Módulo TICO - Plataforma GAIO</h4>
+                                    <span class="status-badge bg-orange">Em andamento</span>
+                                </div>
+                                <p>Desenvolvimento da arquitetura MVC com Thymeleaf e Spring Data JPA.</p>
+                                <span class="meta-info">Parceria com Kawic</span>
+                            </div>
+                            <button class="action-btn"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Destaque / Mural (Adaptado do card Escuro de Assinatura) -->
+                <div class="card dark-card">
+                    <h3>Avisos da Comunidade</h3>
+                    <ul class="features-list">
+                        <li><strong>Reunião de Alinhamento:</strong> Nova interface do TICO aprovada.</li>
+                        <li><strong>Vaga Aberta:</strong> Projeto de automação no Telegram busca desenvolvedor Node.js.</li>
+                        <li><strong>Dica:</strong> Mantenha suas tags de habilidades atualizadas para receber convites.</li>
+                    </ul>
+                    <button class="btn-primary-inverse">Buscar Novas Equipes</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
