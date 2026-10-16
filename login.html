@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sessão - TICO</title>
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            
+            <!-- Lado Esquerdo: Destaque de Projeto / Comunidade -->
+            <div class="login-card-left">
+                <div class="featured-project-overlay">
+                    <span class="badge-featured">Projeto em Destaque</span>
+                    <h3>Módulo TICO</h3>
+                    <p>Alocação inteligente de talentos e conexão de equipes.   </p>
+                    
+                    <div class="featured-footer">
+                        <div class="author-info">
+                            <img src="https://ui-avatars.com/api/?name=Kawic+UEG&background=D46A4F&color=fff&size=80" alt="Autor">
+                            <div>
+                                <strong>Kawic Araújo Brito</strong>
+                                <small>@ueg_tico</small>
+                            </div>
+                        </div>
+                        <div class="carousel-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lado Direito: Formulário de Início de Sessão -->
+            <div class="login-card-right">
+                <div class="login-header">
+                    <h2>TICO</h2>
+                    <p class="subtitle">Insira seus dados para entrar na plataforma</p>
+                </div>
+
+                <form class="login-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="E-mail institucional ou utilizador" required>
+                    </div>
+
+                    <div class="input-group password-group">
+                        <input type="password" id="passwordInput" placeholder="Palavra-passe" required>
+                        <i class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
+                    </div>
+
+                    <div class="forgot-password-container">
+                        <a href="#" class="forgot-link">Esqueceu a senha?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login">Iniciar Sessão</button>
+                </form>
+
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+
+                <button class="btn-sso-ueg">
+                    <i class="fa-solid fa-graduation-cap"></i> Entrar com a Conta UEG
+                </button>
+
+                <div class="register-banner">
+                    <a href="cadastro.html">Ainda não tem conta? <strong>Registre-se aqui!</strong> <i class="fa-solid fa-chevron-up"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
