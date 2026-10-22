@@ -1,4 +1,4 @@
-# 🐦 TICO (Módulo GAIO)
+# 🐦 TICO
 
 **TICO** é um módulo de inovação social e conexão acadêmica do ecossistema **GAIO** (Universidade Estadual de Goiás - UEG). Funciona como uma rede profissional interna (inspirada no modelo de redes modernas como o LinkedIn) focada em conectar talentos, agrupar equipes multidisciplinares e alocar estudantes e pesquisadores de acordo com as demandas de projetos de extensão, pesquisa (PIBIC/PIBITI) e inovação tecnológica.
 
