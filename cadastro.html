@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro & Onboarding - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans (ExtraBold/Black) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+    <div class="signup-wrapper">
+        <div class="signup-card">
+            
+            <!-- Lado Esquerdo: Identidade Visual e Propósito UEG -->
+            <div class="login-card-left">
+                <div class="featured-project-overlay">
+                    <span class="badge-featured">Ecossistema GAIO</span>
+                    <h3>Descubra e Conecte Seus Talentos na UEG</h3>
+                    <p>O <span class="app-brand">TICO</span> aproxima alunos e professores orientadores por meio de competências reais. Monte equipes para projetos de extensão, TCCs e pesquisas com afinidade técnica imediata.</p>
+                    
+                    <div class="featured-footer">
+                        <div class="author-info">
+                            <img src="https://ui-avatars.com/api/?name=UEG+Tico&background=D46A4F&color=fff&size=80" alt="TICO UEG">
+                            <div>
+                                <strong>Universidade Estadual de Goiás</strong>
+                                <small>Plataforma de Alocação de Habilidades</small>
+                            </div>
+                        </div>
+                        <div class="carousel-dots">
+                            <span class="dot"></span>
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lado Direito: Formulário de Cadastro e Onboarding -->
+            <div class="login-card-right">
+                <div class="login-header" style="text-align: left; margin-bottom: 20px;">
+                    <h2 class="app-brand">TICO</h2>
+                    <p class="subtitle">Crie sua conta institucional e configure suas habilidades</p>
+                </div>
+
+                <!-- Indicador Visual dos Passos -->
+                <div class="signup-steps">
+                    <div class="step-item active">
+                        <span class="step-number">1</span>
+                        <span>Dados Acadêmicos</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size: 11px; color: var(--border-color);"></i>
+                    <div class="step-item active">
+                        <span class="step-number">2</span>
+                        <span>Suas Habilidades</span>
+                    </div>
+                </div>
+
+                <!-- Formulário com suporte a Thymeleaf -->
+                <form action="feed.html" th:action="@{/cadastro}" th:object="${usuarioCadastro}" method="POST" class="login-form">
+                    
+                    <!-- PASSO 1: Informações Pessoais e Acadêmicas -->
+                    <div class="form-group">
+                        <label class="form-label" for="nome">
+                            <i class="fa-regular fa-user"></i> Nome Completo <span class="required">*</span>
+                        </label>
+                        <input type="text" id="nome" name="nome" th:field="*{nome}" class="form-control" placeholder="Ex: Gabriel de Moura" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            <i class="fa-regular fa-envelope"></i> E-mail Institucional (@ueg.br) <span class="required">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" th:field="*{email}" class="form-control" placeholder="seu.usuario@ueg.br" pattern=".+@.*ueg\.br" title="Insira seu e-mail institucional @ueg.br" required>
+                        <span class="form-hint">O e-mail oficial garante a validação com a base acadêmica do GAIO.</span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="campus">
+                                <i class="fa-solid fa-building-columns"></i> Câmpus / Unidade <span class="required">*</span>
+                            </label>
+                            <select id="campus" name="campus" th:field="*{campus}" class="form-select" required>
+                                <option value="" disabled selected>Selecione seu Câmpus</option>
+                                <option value="anapolis">Câmpus Central - CET (Anápolis)</option>
+                                <option value="pires-do-rio">UnU Pires do Rio</option>
+                                <option value="goiania">Câmpus Cora Coralina / Goiânia</option>
+                                <option value="itumbiara">UnU Itumbiara</option>
+                                <option value="ipora">UnU Iporá</option>
+                                <option value="morrinhos">UnU Morrinhos</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="curso">
+                                <i class="fa-solid fa-graduation-cap"></i> Curso de Origem <span class="required">*</span>
+                            </label>
+                            <select id="curso" name="curso" th:field="*{curso}" class="form-select" required>
+                                <option value="" disabled selected>Selecione seu Curso</option>
+                                <option value="eng-software">Engenharia de Software</option>
+                                <option value="sistemas-info">Sistemas de Informação</option>
+                                <option value="agronomia">Agronomia</option>
+                                <option value="farmacia">Farmácia</option>
+                                <option value="eng-civil">Engenharia Civil</option>
+                                <option value="administracao">Administração</option>
+                                <option value="ciencias-biologicas">Ciências Biológicas</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="senha">
+                                <i class="fa-solid fa-lock"></i> Senha <span class="required">*</span>
+                            </label>
+                            <input type="password" id="senha" name="senha" th:field="*{senha}" class="form-control" placeholder="Mínimo de 8 caracteres" minlength="8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="confirmarSenha">
+                                <i class="fa-solid fa-lock"></i> Confirmar Senha <span class="required">*</span>
+                            </label>
+                            <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-control" placeholder="Repita a senha" minlength="8" required>
+                        </div>
+                    </div>
+
+                    <!-- PASSO 2: Onboarding de Habilidades (Tags Interativas) -->
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label class="form-label">
+                            <i class="fa-solid fa-tags"></i> Selecione suas Habilidades & Interesses
+                        </label>
+                        <span class="form-hint">Marque as competências que você já tem ou deseja praticar. Você poderá alterar essas tags a qualquer momento no seu perfil.</span>
+                        
+                        <div class="tag-selector-container">
+                            
+                            <!-- Categoria: Tecnologia & Programação -->
+                            <span class="tag-category-title"><i class="fa-solid fa-code"></i> Desenvolvimento & Dados</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-java" name="skills" value="Java / Spring Boot" checked>
+                                    <label for="tag-java" class="tag-choice-label"><i class="fa-brands fa-java"></i> Java / Spring Boot</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-python" name="skills" value="Python">
+                                    <label for="tag-python" class="tag-choice-label"><i class="fa-brands fa-python"></i> Python</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-web" name="skills" value="HTML5 & CSS3" checked>
+                                    <label for="tag-web" class="tag-choice-label"><i class="fa-brands fa-html5"></i> HTML5 & CSS3</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-sql" name="skills" value="Bancos de Dados SQL">
+                                    <label for="tag-sql" class="tag-choice-label"><i class="fa-solid fa-database"></i> SQL / Postgres</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-git" name="skills" value="Git & GitHub">
+                                    <label for="tag-git" class="tag-choice-label"><i class="fa-brands fa-git-alt"></i> Git & GitHub</label>
+                                </div>
+                            </div>
+
+                            <!-- Categoria: Engenharia, Hardware & Agrárias -->
+                            <span class="tag-category-title"><i class="fa-solid fa-microchip"></i> Engenharia, IoT & Agrárias</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-eletronica" name="skills" value="Eletrônica">
+                                    <label for="tag-eletronica" class="tag-choice-label"><i class="fa-solid fa-microchip"></i> Eletrônica</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-arduino" name="skills" value="Arduino & ESP32">
+                                    <label for="tag-arduino" class="tag-choice-label"><i class="fa-solid fa-robot"></i> Arduino / ESP32</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-soldagem" name="skills" value="Soldagem MIG">
+                                    <label for="tag-soldagem" class="tag-choice-label"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-hidroponia" name="skills" value="Hidroponia" checked>
+                                    <label for="tag-hidroponia" class="tag-choice-label"><i class="fa-solid fa-leaf"></i> Hidroponia</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-irrigacao" name="skills" value="Manejo de Irrigação">
+                                    <label for="tag-irrigacao" class="tag-choice-label"><i class="fa-solid fa-faucet-drip"></i> Manejo de Solo</label>
+                                </div>
+                            </div>
+
+                            <!-- Categoria: Design, Negócios & Pesquisa -->
+                            <span class="tag-category-title"><i class="fa-solid fa-pen-ruler"></i> Design, Gestão & Pesquisa</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-uiux" name="skills" value="UI/UX Design">
+                                    <label for="tag-uiux" class="tag-choice-label"><i class="fa-solid fa-palette"></i> UI/UX Design</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-figma" name="skills" value="Figma">
+                                    <label for="tag-figma" class="tag-choice-label"><i class="fa-brands fa-figma"></i> Figma</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-gestao" name="skills" value="Gestão de Projetos">
+                                    <label for="tag-gestao" class="tag-choice-label"><i class="fa-solid fa-list-check"></i> Gestão Ágil / Scrum</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="tag-pesquisa" name="skills" value="Escrita Científica">
+                                    <label for="tag-pesquisa" class="tag-choice-label"><i class="fa-solid fa-book-open"></i> Escrita Científica</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Concordância e Termos UEG -->
+                    <div class="signup-terms">
+                        <input type="checkbox" id="termos" required checked>
+                        <label for="termos">Declaro ser discente/docente da Universidade Estadual de Goiás e aceito os <a href="#">Termos de Uso</a> e as diretrizes de integração de dados do módulo GAIO.</label>
+                    </div>
+
+                    <!-- Botão de Submissão -->
+                    <button type="submit" class="btn-login btn-block">
+                        <i class="fa-solid fa-user-check"></i> Finalizar Cadastro e Entrar no <span class="app-brand">TICO</span>
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+
+                <div style="text-align: center;">
+                    <span style="font-size: 13px; color: var(--text-secondary);">Já tem uma conta cadastrada? </span>
+                    <a href="login.html" style="color: var(--primary-color); font-weight: 600; text-decoration: none; font-size: 13px;">Iniciar Sessão</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

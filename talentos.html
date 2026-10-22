@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banco de Talentos - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item active">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div>
+                    <h1>Banco de Talentos UEG</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Encontre colaboradores, pesquisadores e bolsistas filtrando por competências comprovadas e câmpus.</p>
+                </div>
+                
+                <div class="topbar-actions">
+                    <a href="criar-projeto.html" class="btn-primary btn-sm">
+                        <i class="fa-solid fa-plus"></i> Criar Demanda de Equipe
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Banner Hero com Estatísticas de Pareamento -->
+            <div class="talents-hero-banner">
+                <div class="talents-hero-info">
+                    <h2><i class="fa-solid fa-circle-nodes" style="color: var(--primary-color);"></i> Conexão Inteligente por Competências</h2>
+                    <p>O algoritmo do <span class="app-brand">TICO</span> calcula a afinidade técnica das tags dos estudantes com as necessidades declaradas nos projetos de pesquisa e extensão do GAIO.</p>
+                </div>
+
+                <div class="talents-stats-cards">
+                    <div class="talent-stat-box">
+                        <strong th:text="${stats.totalTalentos} ?: '154'">154</strong>
+                        <small>Talentos</small>
+                    </div>
+                    <div class="talent-stat-box">
+                        <strong th:text="${stats.totalCampus} ?: '8'">8</strong>
+                        <small>Câmpus</small>
+                    </div>
+                    <div class="talent-stat-box">
+                        <strong th:text="${stats.disponiveisImediato} ?: '42'" style="color: #4CAF50;">42</strong>
+                        <small>Disponíveis</small>
+                    </div>
+                    <div class="talent-stat-box">
+                        <strong th:text="${stats.bolsistasAtivos} ?: '18'" style="color: #FFC107;">18</strong>
+                        <small>Bolsistas</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Busca e Filtros Rápidos -->
+            <div class="filter-bar">
+                <form class="filter-form" action="#" th:action="@{/talentos}" method="GET">
+                    
+                    <div class="filter-search-input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="busca" th:value="${termoBusca}" placeholder="Buscar por competência, nome ou tecnologia (ex: Java, IoT, Solo, Soldagem)...">
+                    </div>
+
+                    <div class="filter-select">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <select name="campus" th:value="${campusSelecionado}">
+                            <option value="">Todos os Câmpus UEG</option>
+                            <option value="pires-do-rio">Pires do Rio</option>
+                            <option value="anapolis">Anápolis (Central)</option>
+                            <option value="goiania">Goiânia (ESEFFEGO / Laranjeiras)</option>
+                            <option value="ipameri">Ipameri</option>
+                            <option value="formosa">Formosa</option>
+                            <option value="itumbiara">Itumbiara</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select">
+                        <i class="fa-solid fa-bolt"></i>
+                        <select name="disponibilidade" th:value="${dispSelecionada}">
+                            <option value="">Qualquer Disponibilidade</option>
+                            <option value="imediata">Início Imediato</option>
+                            <option value="parcial">Parcial / Voluntário</option>
+                            <option value="bolsa">Apenas Bolsista Remunerado</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-select">
+                        <i class="fa-solid fa-arrow-down-wide-short"></i>
+                        <select name="ordenacao" th:value="${ordemSelecionada}">
+                            <option value="match">Maior Afinidade / Match</option>
+                            <option value="recentes">Novos Cadastros</option>
+                            <option value="nome">Ordem Alfabética</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-filter"></i> Filtrar
+                    </button>
+                </form>
+            </div>
+
+            <!-- Grade de Talentos Registrados -->
+            <div class="talents-grid">
+                
+                <!-- Card Talento 1 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento1.match} ?: '98% Match'">98% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-open">
+                            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Início Imediato
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Lucas+Ferreira&background=388E3C&color=fff&size=100" 
+                                 th:src="${talento1.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Lucas+Ferreira&background=388E3C&color=fff&size=100'" 
+                                 alt="Lucas Ferreira" class="talent-avatar">
+                            <span class="talent-status-dot" title="Disponível para Projetos"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento1.nome} ?: 'Lucas Ferreira'">Lucas Ferreira</h4>
+                            <span class="talent-course" th:text="${talento1.curso} ?: 'Engenharia Agrícola (6º período)'">Engenharia Agrícola (6º período)</span>
+                            <span class="talent-campus" th:text="${talento1.campus} ?: 'Câmpus Central • Anápolis'">Câmpus Central • Anápolis</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento1.bio} ?: 'Pesquisador com foco em automação agrícola de baixo custo, telemetria com ESP32 e calibração de sensores de umidade de solo capacitivos.'">
+                        Pesquisador com foco em automação agrícola de baixo custo, telemetria com ESP32 e calibração de sensores de umidade de solo capacitivos.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-solid fa-microchip"></i> ESP32 / Arduino</span>
+                        <span class="skill-tag"><i class="fa-solid fa-bolt"></i> Eletrônica</span>
+                        <span class="skill-tag"><i class="fa-solid fa-wifi"></i> Telemetria IoT</span>
+                        <span class="skill-tag"><i class="fa-brands fa-python"></i> Python</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Lucas Ferreira!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Talento 2 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento2.match} ?: '94% Match'">94% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-open">
+                            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Início Imediato
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Beatriz+Santos&background=D46A4F&color=fff&size=100" 
+                                 th:src="${talento2.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Beatriz+Santos&background=D46A4F&color=fff&size=100'" 
+                                 alt="Beatriz Santos" class="talent-avatar">
+                            <span class="talent-status-dot" title="Disponível para Projetos"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento2.nome} ?: 'Beatriz Santos'">Beatriz Santos</h4>
+                            <span class="talent-course" th:text="${talento2.curso} ?: 'Sistemas de Informação (4º período)'">Sistemas de Informação (4º período)</span>
+                            <span class="talent-campus" th:text="${talento2.campus} ?: 'Câmpus Pires do Rio'">Câmpus Pires do Rio</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento2.bio} ?: 'Especialista em interfaces intuitivas para o usuário do campo, prototipagem ágil no Figma, CSS3 modular e integração frontend com Thymeleaf.'">
+                        Especialista em interfaces intuitivas para o usuário do campo, prototipagem ágil no Figma, CSS3 modular e integração frontend com Thymeleaf.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-brands fa-figma"></i> Figma / UI</span>
+                        <span class="skill-tag"><i class="fa-brands fa-html5"></i> HTML5 & CSS3</span>
+                        <span class="skill-tag"><i class="fa-solid fa-code"></i> Thymeleaf</span>
+                        <span class="skill-tag"><i class="fa-brands fa-js"></i> JavaScript</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Beatriz Santos!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Talento 3 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento3.match} ?: '91% Match'">91% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-partial">
+                            <i class="fa-solid fa-clock" style="font-size: 8px;"></i> Em Projeto Ativo
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Mariana+Alencar&background=D99C41&color=fff&size=100" 
+                                 th:src="${talento3.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Mariana+Alencar&background=D99C41&color=fff&size=100'" 
+                                 alt="Mariana Alencar" class="talent-avatar">
+                            <span class="talent-status-dot" style="background-color: var(--status-pending);" title="Disponível Parcialmente"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento3.nome} ?: 'Mariana Alencar'">Mariana Alencar</h4>
+                            <span class="talent-course" th:text="${talento3.curso} ?: 'Engenharia Agrícola (8º período)'">Engenharia Agrícola (8º período)</span>
+                            <span class="talent-campus" th:text="${talento3.campus} ?: 'Câmpus Central • Anápolis'">Câmpus Central • Anápolis</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento3.bio} ?: 'Líder de equipe em projetos semi-hidropônicos. Atuação em dimensionamento de reservatórios, bombas solares e química de nutrientes agrícolas.'">
+                        Líder de equipe em projetos semi-hidropônicos. Atuação em dimensionamento de reservatórios, bombas solares e química de nutrientes agrícolas.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                        <span class="skill-tag"><i class="fa-solid fa-droplet"></i> Irrigação</span>
+                        <span class="skill-tag"><i class="fa-solid fa-solar-panel"></i> Energia Solar</span>
+                        <span class="skill-tag"><i class="fa-solid fa-users-gear"></i> Gestão de Equipe</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Mariana Alencar!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Talento 4 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento4.match} ?: '89% Match'">89% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-open">
+                            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Início Imediato
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Rodrigo+Lima&background=182229&color=fff&size=100" 
+                                 th:src="${talento4.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Rodrigo+Lima&background=182229&color=fff&size=100'" 
+                                 alt="Rodrigo Lima" class="talent-avatar">
+                            <span class="talent-status-dot" title="Disponível"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento4.nome} ?: 'Rodrigo Lima'">Rodrigo Lima</h4>
+                            <span class="talent-course" th:text="${talento4.curso} ?: 'Agronomia (5º período)'">Agronomia (5º período)</span>
+                            <span class="talent-campus" th:text="${talento4.campus} ?: 'Câmpus Ipameri'">Câmpus Ipameri</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento4.bio} ?: 'Experiência em mapeamento de fertilidade de lavouras com drones multi-espectrais, manejo integrado de pragas e elaboração de relatórios técnicos.'">
+                        Experiência em mapeamento de fertilidade de lavouras com drones multi-espectrais, manejo integrado de pragas e elaboração de relatórios técnicos.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-solid fa-earth-americas"></i> Análise de Solo</span>
+                        <span class="skill-tag"><i class="fa-solid fa-helicopter"></i> Drones Agrícolas</span>
+                        <span class="skill-tag"><i class="fa-solid fa-satellite"></i> GIS / QGIS</span>
+                        <span class="skill-tag"><i class="fa-solid fa-seedling"></i> Fitopatologia</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Rodrigo Lima!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Talento 5 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento5.match} ?: '87% Match'">87% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-open">
+                            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Início Imediato
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Thiago+Mendonca&background=182229&color=fff&size=100" 
+                                 th:src="${talento5.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Thiago+Mendonca&background=182229&color=fff&size=100'" 
+                                 alt="Thiago Mendonça" class="talent-avatar">
+                            <span class="talent-status-dot" title="Disponível"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento5.nome} ?: 'Thiago Mendonça'">Thiago Mendonça</h4>
+                            <span class="talent-course" th:text="${talento5.curso} ?: 'Ciência da Computação (7º período)'">Ciência da Computação (7º período)</span>
+                            <span class="talent-campus" th:text="${talento5.campus} ?: 'Câmpus Central • Anápolis'">Câmpus Central • Anápolis</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento5.bio} ?: 'Desenvolvimento de algoritmos de visão computacional (OpenCV e YOLO) para contagem de frutos e diagnóstico foliar automático em lavouras de soja.'">
+                        Desenvolvimento de algoritmos de visão computacional (OpenCV e YOLO) para contagem de frutos e diagnóstico foliar automático em lavouras de soja.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-brands fa-python"></i> Python / PyTorch</span>
+                        <span class="skill-tag"><i class="fa-solid fa-eye"></i> OpenCV / Visão</span>
+                        <span class="skill-tag"><i class="fa-solid fa-brain"></i> Machine Learning</span>
+                        <span class="skill-tag"><i class="fa-brands fa-docker"></i> Docker</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Thiago Mendonça!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card Talento 6 -->
+                <div class="talent-card-item">
+                    <div class="talent-card-header-top">
+                        <span class="talent-match-pill">
+                            <i class="fa-solid fa-star"></i> <span th:text="${talento6.match} ?: '84% Match'">84% Match</span>
+                        </span>
+                        <span class="talent-availability-badge avail-open">
+                            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Início Imediato
+                        </span>
+                    </div>
+
+                    <div class="talent-header">
+                        <div class="talent-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Camila+Vasconcelos&background=D46A4F&color=fff&size=100" 
+                                 th:src="${talento6.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Camila+Vasconcelos&background=D46A4F&color=fff&size=100'" 
+                                 alt="Camila Vasconcelos" class="talent-avatar">
+                            <span class="talent-status-dot" title="Disponível"></span>
+                        </div>
+                        <div class="talent-details">
+                            <h4 th:text="${talento6.nome} ?: 'Camila Vasconcelos'">Camila Vasconcelos</h4>
+                            <span class="talent-course" th:text="${talento6.curso} ?: 'Farmácia & Bioquímica (5º período)'">Farmácia & Bioquímica (5º período)</span>
+                            <span class="talent-campus" th:text="${talento6.campus} ?: 'Câmpus Itumbiara'">Câmpus Itumbiara</span>
+                        </div>
+                    </div>
+
+                    <p class="talent-bio" th:text="${talento6.bio} ?: 'Pesquisa em controle microbiológico de água para estufas, análise de patógenos em soluções hidropônicas e formulação de bioinsumos sustentáveis.'">
+                        Pesquisa em controle microbiológico de água para estufas, análise de patógenos em soluções hidropônicas e formulação de bioinsumos sustentáveis.
+                    </p>
+
+                    <div class="skills-container" style="margin-bottom: 16px;">
+                        <span class="skill-tag"><i class="fa-solid fa-vial-virus"></i> Microbiologia</span>
+                        <span class="skill-tag"><i class="fa-solid fa-flask"></i> Química de Solos</span>
+                        <span class="skill-tag"><i class="fa-solid fa-dna"></i> Bioinsumos</span>
+                    </div>
+
+                    <div class="talent-footer">
+                        <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1; text-align: center;">
+                            <i class="fa-regular fa-user"></i> Ver Perfil
+                        </a>
+                        <button type="button" class="btn-primary btn-sm" style="flex: 1;" onclick="alert('Convite enviado com sucesso para Camila Vasconcelos!')">
+                            <i class="fa-solid fa-paper-plane"></i> Convidar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

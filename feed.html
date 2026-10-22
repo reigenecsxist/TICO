@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Acadêmico - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div>
+                    <h1>Feed Acadêmico & Conexões</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Acompanhe novidades, projetos em busca de equipes e editais da UEG em tempo real.</p>
+                </div>
+                
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar no feed, projetos ou talentos...">
+                    </div>
+
+                    <a href="editais-eventos.html" class="icon-btn-badge" title="Notificações e Avisos">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot-alert"></span>
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Layout do Feed: Estilo LinkedIn Social Acadêmico (3 Colunas) -->
+            <div class="feed-layout">
+                
+                <!-- COLUNA ESQUERDA: Resumo do Perfil & Atalhos -->
+                <aside class="feed-col-left">
+                    
+                    <div class="profile-summary-card">
+                        <div class="profile-cover"></div>
+                        <div class="profile-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=100" 
+                                 th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=100'" 
+                                 alt="Avatar do Usuário" 
+                                 class="profile-summary-avatar">
+                        </div>
+                        <div class="profile-summary-body">
+                            <h3 th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</h3>
+                            <p class="user-headline" th:text="${usuarioLogado.titulo} ?: 'Desenvolvedor Fullstack | Eng. de Software'">Desenvolvedor Fullstack | Eng. de Software</p>
+                            <span class="campus-pill">
+                                <i class="fa-solid fa-graduation-cap"></i> 
+                                <span th:text="${usuarioLogado.campus} ?: 'Câmpus Pires do Rio'">Câmpus Pires do Rio</span>
+                            </span>
+
+                            <div class="profile-metrics">
+                                <div class="metric-item">
+                                    <span>Visualizações do Perfil</span>
+                                    <strong th:text="${metricas.viewsPerfil} ?: '48'">48</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Matches com Projetos</span>
+                                    <strong th:text="${metricas.totalMatches} ?: '7'">7</strong>
+                                </div>
+                                <div class="metric-item">
+                                    <span>Projetos Ativos</span>
+                                    <strong th:text="${metricas.projetosAtivos} ?: '2'">2</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-summary-footer">
+                            <a href="perfil.html">
+                                <i class="fa-regular fa-id-badge"></i> Ver meu perfil completo
+                            </a>
+                            <a href="explorar.html">
+                                <i class="fa-regular fa-bookmark"></i> Projetos salvos
+                            </a>
+                            <a href="talentos.html">
+                                <i class="fa-solid fa-network-wired"></i> Meus pares recomendados
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Card de Habilidades Rápidas -->
+                    <div class="card" style="padding: 20px;">
+                        <h4 style="font-size: 14px; color: var(--accent-color); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-tags" style="color: var(--primary-color);"></i> Minhas Tags em Alta
+                        </h4>
+                        <div class="skills-container" style="margin-top: 0;">
+                            <span class="skill-tag" th:each="hab : ${usuarioLogado.habilidades}"><i class="fa-brands fa-java"></i> Java / Spring</span>
+                            <span class="skill-tag"><i class="fa-solid fa-microchip"></i> IoT / Sensores</span>
+                            <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                        </div>
+                        <a href="configuracoes.html" style="display: block; font-size: 11.5px; color: var(--primary-color); text-decoration: none; margin-top: 14px; font-weight: 600;">
+                            + Gerenciar minhas habilidades
+                        </a>
+                    </div>
+
+                </aside>
+
+                <!-- COLUNA CENTRAL: Criação de Post & Linha do Tempo de Publicações -->
+                <section class="feed-col-center">
+                    
+                    <!-- Caixa de Publicar / Criar Demanda -->
+                    <div class="create-post-card">
+                        <div class="create-post-top">
+                            <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                                 th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                                 alt="Avatar">
+                            <button class="create-post-trigger" onclick="window.location.href='criar-projeto.html'">
+                                No que você está trabalhando ou precisando de equipe na UEG?
+                            </button>
+                        </div>
+                        <div class="create-post-actions">
+                            <a href="criar-projeto.html" class="post-action-btn action-vaga">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <span>Demanda de Projeto</span>
+                            </a>
+                            <button type="button" class="post-action-btn action-midia">
+                                <i class="fa-regular fa-image"></i>
+                                <span>Mídia / Foto</span>
+                            </button>
+                            <a href="editais-eventos.html" class="post-action-btn action-evento">
+                                <i class="fa-regular fa-calendar-check"></i>
+                                <span>Evento / Edital</span>
+                            </a>
+                            <button type="button" class="post-action-btn action-artigo">
+                                <i class="fa-solid fa-newspaper"></i>
+                                <span>Artigo / Relato</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Filtros Rápidos do Feed -->
+                    <div class="feed-filter-bar">
+                        <span class="filter-title">Classificar por:</span>
+                        <div class="feed-filter-options">
+                            <a href="feed.html?sort=relevancia" class="feed-filter-pill active">
+                                <i class="fa-solid fa-bolt"></i> Mais Relevantes
+                            </a>
+                            <a href="feed.html?sort=recentes" class="feed-filter-pill">
+                                Recentes
+                            </a>
+                            <a href="feed.html?sort=vagas" class="feed-filter-pill">
+                                <i class="fa-solid fa-user-plus"></i> Vagas Abertas
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- POST 1: Vaga e Demanda de Projeto com Pareamento de Habilidades -->
+                    <article class="post-card">
+                        <header class="post-header">
+                            <div class="post-author">
+                                <img src="https://ui-avatars.com/api/?name=Carlos+Eduardo&background=182229&color=fff&size=80" 
+                                     alt="Prof. Carlos Eduardo" class="post-author-avatar">
+                                <div class="post-author-meta">
+                                    <h4>
+                                        <span th:text="${post1.autorNome} ?: 'Prof. Dr. Carlos Eduardo'">Prof. Dr. Carlos Eduardo</span>
+                                        <span class="author-badge">Orientador</span>
+                                    </h4>
+                                    <span class="author-sub" th:text="${post1.autorSub} ?: 'Coord. Lab. Agrocomputação • Câmpus Pires do Rio'">Coord. Lab. Agrocomputação • Câmpus Pires do Rio</span>
+                                    <span class="post-time"><i class="fa-regular fa-clock"></i> Há 2 horas • UEG Pública</span>
+                                </div>
+                            </div>
+                            <button class="post-options-btn" title="Mais opções"><i class="fa-solid fa-ellipsis"></i></button>
+                        </header>
+
+                        <div class="post-tag-badge">
+                            <i class="fa-solid fa-bullhorn"></i> Oportunidade com Bolsa de Pesquisa (PIBIC / FAPEG)
+                        </div>
+
+                        <div class="post-body">
+                            <p>
+                                Pessoal do GAIO e alunos da UEG, abrimos <strong>2 vagas imediatas</strong> para integrar nossa equipe de pesquisa no projeto de monitoramento automatizado de solo. 
+                                Buscamos alunos com interesse em unir desenvolvimento de software e hardware agrícola.
+                            </p>
+                            <p>
+                                Caso tenha afinidade com as tags abaixo, candidate-se diretamente pelo card do projeto ou entre em contato pelo TICO!
+                            </p>
+                        </div>
+
+                        <!-- Card Embutido de Oportunidade / Projeto -->
+                        <div class="post-opportunity-card">
+                            <div class="opp-header">
+                                <div>
+                                    <h5 class="opp-title" th:text="${post1.projetoTitulo} ?: 'Sistema de Telemetria e Irrigação Inteligente'">Sistema de Telemetria e Irrigação Inteligente</h5>
+                                    <small style="color: var(--text-secondary);">Laboratório de Inovação Agrocomputacional • UEG</small>
+                                </div>
+                                <span class="opp-stipend"><i class="fa-solid fa-sack-dollar"></i> Bolsa R$ 700 / mês</span>
+                            </div>
+
+                            <div class="opp-skills">
+                                <span class="skill-tag"><i class="fa-brands fa-java"></i> Java / Spring Boot</span>
+                                <span class="skill-tag"><i class="fa-solid fa-microchip"></i> IoT / ESP32</span>
+                                <span class="skill-tag"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+                            </div>
+
+                            <div class="opp-footer">
+                                <span><i class="fa-solid fa-users"></i> 2 vagas abertas • Início Imediato</span>
+                                <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                    <i class="fa-solid fa-hand-holding-hand"></i> Tenho Interesse / Match
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Métricas de Interação -->
+                        <div class="post-stats-row">
+                            <div class="reactions-cluster">
+                                <div class="reaction-icons-stack">
+                                    <span class="reaction-icon-circle icon-like"><i class="fa-solid fa-thumbs-up"></i></span>
+                                    <span class="reaction-icon-circle icon-idea"><i class="fa-solid fa-lightbulb"></i></span>
+                                </div>
+                                <span style="margin-left: 8px;">24 pessoas apoiaram</span>
+                            </div>
+                            <div>
+                                <span>6 comentários</span> • <span>3 compartilhamentos</span>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Ações Sociais -->
+                        <div class="post-actions-toolbar">
+                            <button type="button" class="btn-post-action active">
+                                <i class="fa-regular fa-thumbs-up"></i> Apoiar
+                            </button>
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-regular fa-comment-dots"></i> Comentar
+                            </button>
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                            </button>
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-regular fa-paper-plane"></i> Enviar a Colega
+                            </button>
+                        </div>
+
+                        <!-- Seção de Comentários (Snippet) -->
+                        <div class="post-comments-box">
+                            <div class="comment-input-row">
+                                <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" alt="Avatar">
+                                <input type="text" placeholder="Escreva uma resposta ou tire dúvidas sobre a vaga...">
+                            </div>
+
+                            <div class="comment-item">
+                                <img src="https://ui-avatars.com/api/?name=Mariana+Alencar&background=D99C41&color=fff&size=60" alt="Mariana">
+                                <div class="comment-bubble">
+                                    <strong>Mariana Alencar • Eng. Agrícola</strong>
+                                    <p>Excelente iniciativa, professor! Repassei para os alunos do 4º período que estão estudando Spring e automação.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- POST 2: Conquista de Projeto & Prototipagem Concluída -->
+                    <article class="post-card">
+                        <header class="post-header">
+                            <div class="post-author">
+                                <img src="https://ui-avatars.com/api/?name=Mariana+Alencar&background=D99C41&color=fff&size=80" 
+                                     alt="Mariana Alencar" class="post-author-avatar">
+                                <div class="post-author-meta">
+                                    <h4>
+                                        <span th:text="${post2.autorNome} ?: 'Mariana Alencar'">Mariana Alencar</span>
+                                        <span class="author-badge" style="background: rgba(56, 142, 60, 0.12); color: var(--status-open);">Estudante Líder</span>
+                                    </h4>
+                                    <span class="author-sub" th:text="${post2.autorSub} ?: 'Engenharia Agrícola • Câmpus Central Anápolis'">Engenharia Agrícola • Câmpus Central Anápolis</span>
+                                    <span class="post-time"><i class="fa-regular fa-clock"></i> Ontem às 16:40 • Pública</span>
+                                </div>
+                            </div>
+                            <button class="post-options-btn" title="Mais opções"><i class="fa-solid fa-ellipsis"></i></button>
+                        </header>
+
+                        <div class="post-tag-badge badge-conquista">
+                            <i class="fa-solid fa-circle-check"></i> Conquista: 1ª Fase do Protótipo Concluída!
+                        </div>
+
+                        <div class="post-body">
+                            <p>
+                                Muito orgulho de anunciar que nossa equipe multidisciplinar — formada aqui pelo <strong class="app-brand">TICO</strong> com alunos de Agronomia e TI — finalizou com sucesso a montagem da <strong>Estufa Semi-Hidropônica Integrada</strong>! 🌱⚡
+                            </p>
+                            <p>
+                                Conseguimos uma redução preliminar de 35% no consumo de água com o circuito de recirculação automatizado. Um agradecimento especial ao <a href="perfil.html" class="post-link">@Gabriel de Moura</a> pela programação do firmware e à orientadora Profª Helena.
+                            </p>
+                        </div>
+
+                        <!-- Mídia Visual de Demonstração -->
+                        <div class="post-media-box">
+                            <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80" 
+                                 alt="Foto da Estufa Automatizada">
+                        </div>
+
+                        <!-- Métricas e Ações -->
+                        <div class="post-stats-row">
+                            <div class="reactions-cluster">
+                                <div class="reaction-icons-stack">
+                                    <span class="reaction-icon-circle icon-applaud"><i class="fa-solid fa-hands-clapping"></i></span>
+                                    <span class="reaction-icon-circle icon-like"><i class="fa-solid fa-thumbs-up"></i></span>
+                                </div>
+                                <span style="margin-left: 8px;">42 pessoas parabenizaram</span>
+                            </div>
+                            <div>
+                                <span>9 comentários</span>
+                            </div>
+                        </div>
+
+                        <div class="post-actions-toolbar">
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-regular fa-hands-clapping"></i> Parabéns!
+                            </button>
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-regular fa-comment-dots"></i> Comentar
+                            </button>
+                            <button type="button" class="btn-post-action">
+                                <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                            </button>
+                            <a href="projeto-detalhes.html" class="btn-post-action" style="text-decoration: none;">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Projeto
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- POST 3: Comunicado Oficial da Universidade / GAIO -->
+                    <article class="post-card">
+                        <header class="post-header">
+                            <div class="post-author">
+                                <img src="https://ui-avatars.com/api/?name=UEG+Oficial&background=D46A4F&color=fff&size=80" 
+                                     alt="Pró-Reitoria UEG" class="post-author-avatar">
+                                <div class="post-author-meta">
+                                    <h4>
+                                        <span>Pró-Reitoria de Extensão e Pesquisa - UEG</span>
+                                        <i class="fa-solid fa-circle-check" style="color: var(--primary-color); font-size: 13px;" title="Canal Oficial Verificado"></i>
+                                    </h4>
+                                    <span class="author-sub">Administração Central • Ecossistema GAIO</span>
+                                    <span class="post-time"><i class="fa-regular fa-clock"></i> Há 1 dia • Comunicado Institucional</span>
+                                </div>
+                            </div>
+                            <button class="post-options-btn" title="Mais opções"><i class="fa-solid fa-ellipsis"></i></button>
+                        </header>
+
+                        <div class="post-tag-badge badge-official">
+                            <i class="fa-solid fa-scroll"></i> Edital Aberto • PROEC 04/2026
+                        </div>
+
+                        <div class="post-body">
+                            <p>
+                                Atenção aos orientadores e estudantes: o edital de <strong>Bolsas de Extensão Tecnológica e Inovação Comunitária</strong> está aberto para inscrições até 15 de Novembro de 2026. 
+                            </p>
+                            <p>
+                                Equipes compostas por estudantes de múltiplos câmpus da UEG têm pontuação bonificada na avaliação do comitê acadêmico. Use o módulo <strong class="app-brand">TICO</strong> para encontrar seus pares!
+                            </p>
+                        </div>
+
+                        <div class="opp-footer" style="border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; background: var(--bg-main);">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fa-regular fa-file-pdf" style="font-size: 24px; color: var(--primary-color);"></i>
+                                <div>
+                                    <strong style="font-size: 13px; color: var(--accent-color); display: block;">Edital_PROEC_Inovacao_2026.pdf</strong>
+                                    <small style="color: var(--text-secondary);">Documento Oficial UEG • 3.2 MB</small>
+                                </div>
+                            </div>
+                            <a href="editais-eventos.html" class="btn-outline btn-sm">
+                                <i class="fa-solid fa-eye"></i> Ver Detalhes do Edital
+                            </a>
+                        </div>
+                    </article>
+
+                </section>
+
+                <!-- COLUNA DIREITA: Widgets Laterais (Editais, Recomendações e Tendências) -->
+                <aside class="feed-col-right">
+                    
+                    <!-- Widget 1: Editais & Prazos Próximos -->
+                    <div class="feed-widget">
+                        <div class="widget-header">
+                            <h4><i class="fa-regular fa-calendar-days"></i> Editais em Destaque</h4>
+                            <a href="editais-eventos.html" class="widget-link-all">Ver todos</a>
+                        </div>
+
+                        <div class="widget-list">
+                            <a href="editais-eventos.html" class="widget-item-edital">
+                                <strong>Edital PIBIC / PIBITI 2026-2027</strong>
+                                <div class="widget-edital-meta">
+                                    <span>Bolsas CNPq / UEG</span>
+                                    <span class="widget-deadline-badge"><i class="fa-solid fa-stopwatch"></i> Faltam 5 dias</span>
+                                </div>
+                            </a>
+
+                            <a href="editais-eventos.html" class="widget-item-edital">
+                                <strong>Hackathon UEG Inova 2026</strong>
+                                <div class="widget-edital-meta">
+                                    <span>Inovação no Campo</span>
+                                    <span class="widget-deadline-badge" style="color: var(--status-open);"><i class="fa-solid fa-check"></i> Inscrições abertas</span>
+                                </div>
+                            </a>
+
+                            <a href="editais-eventos.html" class="widget-item-edital">
+                                <strong>PROEC Extensão Comunitária</strong>
+                                <div class="widget-edital-meta">
+                                    <span>FAPEG / Fomento</span>
+                                    <span class="widget-deadline-badge"><i class="fa-regular fa-clock"></i> Até 15 Nov</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Widget 2: Talentos Recomendados (Baseado nas Habilidades do Usuário) -->
+                    <div class="feed-widget">
+                        <div class="widget-header">
+                            <h4><i class="fa-solid fa-user-plus"></i> Conexões Recomendadas</h4>
+                            <a href="talentos.html" class="widget-link-all">Explorar</a>
+                        </div>
+
+                        <div class="widget-list">
+                            <div class="widget-item-talent">
+                                <img src="https://ui-avatars.com/api/?name=Lucas+Ferreira&background=388E3C&color=fff&size=60" alt="Lucas">
+                                <div class="widget-talent-info">
+                                    <strong>Lucas Ferreira</strong>
+                                    <small>Engenharia Agrícola • UEG Central</small>
+                                    <span class="widget-talent-match">96% afinidade técnica</span>
+                                </div>
+                                <a href="talentos.html" class="btn-outline btn-sm" style="padding: 4px 8px; font-size: 11px;">
+                                    Conectar
+                                </a>
+                            </div>
+
+                            <div class="widget-item-talent">
+                                <img src="https://ui-avatars.com/api/?name=Beatriz+Santos&background=D46A4F&color=fff&size=60" alt="Beatriz">
+                                <div class="widget-talent-info">
+                                    <strong>Beatriz Santos</strong>
+                                    <small>Sistemas de Informação • Pires do Rio</small>
+                                    <span class="widget-talent-match">92% afinidade técnica</span>
+                                </div>
+                                <a href="talentos.html" class="btn-outline btn-sm" style="padding: 4px 8px; font-size: 11px;">
+                                    Conectar
+                                </a>
+                            </div>
+
+                            <div class="widget-item-talent">
+                                <img src="https://ui-avatars.com/api/?name=Rodrigo+Lima&background=182229&color=fff&size=60" alt="Rodrigo">
+                                <div class="widget-talent-info">
+                                    <strong>Rodrigo Lima</strong>
+                                    <small>Agronomia • Câmpus Ipameri</small>
+                                    <span class="widget-talent-match">88% afinidade técnica</span>
+                                </div>
+                                <a href="talentos.html" class="btn-outline btn-sm" style="padding: 4px 8px; font-size: 11px;">
+                                    Conectar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Widget 3: Projetos em Alta -->
+                    <div class="feed-widget">
+                        <div class="widget-header">
+                            <h4><i class="fa-solid fa-fire"></i> Projetos em Alta na UEG</h4>
+                            <a href="explorar.html" class="widget-link-all">Ver ranking</a>
+                        </div>
+                        <ol style="padding-left: 20px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.8;">
+                            <li><a href="projeto-detalhes.html" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">Estufa Semi-Hidropônica Integrada</a></li>
+                            <li><a href="projeto-detalhes.html" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">Módulo TICO - Plataforma GAIO</a></li>
+                            <li><a href="explorar.html" style="color: var(--accent-color); font-weight: 600; text-decoration: none;">Sensor Fotovoltaico de Baixo Custo</a></li>
+                        </ol>
+                    </div>
+
+                    <!-- Rodapé Institucional -->
+                    <div class="feed-widget-footer">
+                        <div>
+                            <a href="#">Sobre o TICO</a> • 
+                            <a href="#">Ecossistema GAIO</a> • 
+                            <a href="#">Diretrizes UEG</a>
+                        </div>
+                        <div style="margin-top: 4px;">
+                            <a href="configuracoes.html">Privacidade</a> • 
+                            <a href="#">Central de Ajuda</a>
+                        </div>
+                        <div style="margin-top: 8px; color: #a19f9b;">
+                            <span class="app-brand">TICO</span> © 2026 - Universidade Estadual de Goiás
+                        </div>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

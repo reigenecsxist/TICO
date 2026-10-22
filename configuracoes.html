@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações da Conta - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item active">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div>
+                    <h1>Configurações da Conta</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Gerencie suas preferências de match, visibilidade acadêmica e segurança.</p>
+                </div>
+                
+                <div class="topbar-actions">
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Layout das Configurações: Navegação Lateral + Painéis de Formulário -->
+            <div class="settings-wrapper">
+                
+                <!-- Menu Lateral das Configurações -->
+                <aside class="settings-nav-card">
+                    <span class="settings-nav-title">Menu de Opções</span>
+                    <nav class="settings-nav-menu">
+                        <a href="#perfil" class="settings-nav-item active">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Dados Acadêmicos</span>
+                        </a>
+                        <a href="#match" class="settings-nav-item">
+                            <i class="fa-solid fa-sliders"></i>
+                            <span>Pareamento & Match</span>
+                        </a>
+                        <a href="#notificacoes" class="settings-nav-item">
+                            <i class="fa-regular fa-bell"></i>
+                            <span>Notificações</span>
+                        </a>
+                        <a href="#seguranca" class="settings-nav-item">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Segurança & Acesso</span>
+                        </a>
+                    </nav>
+                </aside>
+
+                <!-- Área Central dos Formulários -->
+                <div class="settings-content-cards">
+                    
+                    <!-- Formulário Preparado para Spring Boot / Thymeleaf -->
+                    <form action="#" th:action="@{/configuracoes/salvar}" th:object="${usuarioForm}" method="POST">
+                        
+                        <!-- CARD 1: Dados Acadêmicos & Perfil -->
+                        <div class="settings-card" id="perfil" style="margin-bottom: 24px;">
+                            <div class="settings-card-header">
+                                <div>
+                                    <h3><i class="fa-regular fa-id-card"></i> Identidade & Dados Acadêmicos</h3>
+                                    <p>Informações sincronizadas com o banco de talentos e visíveis aos líderes de projeto.</p>
+                                </div>
+                            </div>
+
+                            <!-- Avatar do Usuário -->
+                            <div class="settings-avatar-row">
+                                <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=120" 
+                                     th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=120'" 
+                                     alt="Avatar" class="settings-avatar-preview">
+                                <div class="settings-avatar-actions">
+                                    <div style="display: flex; gap: 8px;">
+                                        <button type="button" class="btn-outline btn-sm">
+                                            <i class="fa-solid fa-camera"></i> Alterar Foto
+                                        </button>
+                                        <button type="button" class="btn-outline btn-sm" style="color: var(--status-closed); border-color: rgba(188,75,75,0.4);">
+                                            Remover
+                                        </button>
+                                    </div>
+                                    <small style="color: var(--text-secondary); font-size: 11px;">Formatos JPG ou PNG até 2MB.</small>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="nome">Nome Completo</label>
+                                    <input type="text" id="nome" name="nome" class="form-control" 
+                                           value="Gabriel de Moura" th:value="${usuarioLogado.nome} ?: 'Gabriel de Moura'" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="cargo">Título / Especialidade Principal</label>
+                                    <input type="text" id="cargo" name="cargo" class="form-control" 
+                                           value="Desenvolvedor Fullstack | Eng. de Software" 
+                                           th:value="${usuarioLogado.cargo} ?: 'Desenvolvedor Fullstack | Eng. de Software'">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="email">E-mail Institucional (@ueg.br)</label>
+                                    <input type="email" id="email" name="email" class="form-control" 
+                                           value="gabriel.moura@ueg.br" th:value="${usuarioLogado.email} ?: 'gabriel.moura@ueg.br'" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="matricula">Matrícula Acadêmica (GAIO)</label>
+                                    <input type="text" id="matricula" name="matricula" class="form-control" 
+                                           value="2026100142-UEG" th:value="${usuarioLogado.matricula} ?: '2026100142-UEG'" readonly style="background-color: var(--bg-main);">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="campus">Câmpus / Unidade Universitária</label>
+                                    <select id="campus" name="campus" class="form-control">
+                                        <option value="pires-do-rio" selected>Câmpus Pires do Rio</option>
+                                        <option value="anapolis">Câmpus Central • Anápolis</option>
+                                        <option value="goiania">Câmpus Goiânia</option>
+                                        <option value="ipameri">Câmpus Ipameri</option>
+                                        <option value="formosa">Câmpus Formosa</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="curso">Curso de Graduação / Pós</label>
+                                    <input type="text" id="curso" name="curso" class="form-control" 
+                                           value="Engenharia de Software (5º Período)" 
+                                           th:value="${usuarioLogado.curso} ?: 'Engenharia de Software (5º Período)'">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="bio">Biografia Curta (Resumo de Interesses de Pesquisa)</label>
+                                <textarea id="bio" name="bio" class="form-control" rows="3" 
+                                          placeholder="Descreva suas áreas de interesse, projetos anteriores e afinidades técnicas...">Desenvolvedor focado em ecossistemas de software robustos com Java e Spring Boot. Entusiasta de IoT para agricultura familiar e prototipagem ágil no TICO/GAIO.</textarea>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fa-brands fa-github"></i> GitHub</label>
+                                    <input type="url" name="github" class="form-control" placeholder="https://github.com/seu-perfil" value="https://github.com/gabrieldemoura">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
+                                    <input type="url" name="linkedin" class="form-control" placeholder="https://linkedin.com/in/seu-perfil" value="https://linkedin.com/in/gabrieldemoura">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fa-solid fa-graduation-cap"></i> Currículo Lattes</label>
+                                    <input type="url" name="lattes" class="form-control" placeholder="http://lattes.cnpq.br/...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Pareamento & Match -->
+                        <div class="settings-card" id="match" style="margin-bottom: 24px;">
+                            <div class="settings-card-header">
+                                <div>
+                                    <h3><i class="fa-solid fa-sliders"></i> Preferências de Pareamento & Match</h3>
+                                    <p>Configure como e quando líderes de projeto podem encontrar e convidar você para equipes.</p>
+                                </div>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Exibir meu perfil no Banco de Talentos UEG</h5>
+                                    <p>Permite que outros alunos e professores visualizem suas competências cadastradas para compor equipes.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="visivelBancoTalentos" checked th:checked="${configuracoes.visivelBancoTalentos} ?: true">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Receber convites diretos para novos projetos</h5>
+                                    <p>Permite que líderes enviem convites de adesão à equipe quando houver afinidade acima de 80%.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="receberConvites" checked th:checked="${configuracoes.receberConvites} ?: true">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Interesse em Bolsas de Pesquisa & Iniciação Tecnológica</h5>
+                                    <p>Sua conta terá prioridade nos filtros de vagas com bolsas vinculadas (PIBIC/PIBITI/FAPEG).</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="interesseBolsas" checked th:checked="${configuracoes.interesseBolsas} ?: true">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Disponibilidade para Projetos Voluntários / Horas Complementares</h5>
+                                    <p>Indica que você tem interesse em somar horas de extensão sem necessidade de remuneração.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="disponivelVoluntario" th:checked="${configuracoes.disponivelVoluntario} ?: false">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: Notificações -->
+                        <div class="settings-card" id="notificacoes" style="margin-bottom: 24px;">
+                            <div class="settings-card-header">
+                                <div>
+                                    <h3><i class="fa-regular fa-bell"></i> Notificações & Alertas</h3>
+                                    <p>Escolha os comunicados que deseja receber no seu e-mail institucional.</p>
+                                </div>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Avisos de novos editais abertos na UEG</h5>
+                                    <p>Receba alertas imediatos quando a Pró-Reitoria publicar chamadas PIBIC ou PROEC.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="notificarEditais" checked th:checked="${configuracoes.notificarEditais} ?: true">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Alertas de novas vagas que correspondam às minhas tags</h5>
+                                    <p>Se um projeto for cadastrado solicitando suas habilidades, você receberá um e-mail de match.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="notificarMatch" checked th:checked="${configuracoes.notificarMatch} ?: true">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+
+                            <div class="settings-switch-row">
+                                <div class="switch-info">
+                                    <h5>Resumo semanal de projetos em alta no Feed do TICO</h5>
+                                    <p>Boletim com os principais destaques, conquistas de protótipos e hackathons.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" name="boletimSemanal" th:checked="${configuracoes.boletimSemanal} ?: false">
+                                    <span class="slider-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- CARD 4: Segurança & Senha -->
+                        <div class="settings-card" id="seguranca" style="margin-bottom: 24px;">
+                            <div class="settings-card-header">
+                                <div>
+                                    <h3><i class="fa-solid fa-shield-halved"></i> Segurança & Acesso</h3>
+                                    <p>Gerencie seus métodos de autenticação na plataforma TICO.</p>
+                                </div>
+                            </div>
+
+                            <div style="background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <i class="fa-solid fa-graduation-cap" style="font-size: 24px; color: var(--primary-color);"></i>
+                                    <div>
+                                        <strong style="font-size: 13.5px; color: var(--accent-color); display: block;">Login Institucional UEG (SSO)</strong>
+                                        <small style="color: var(--text-secondary);">Vinculado à conta Google Workspace da UEG</small>
+                                    </div>
+                                </div>
+                                <span class="badge-featured" style="margin-bottom: 0; background: var(--status-open);">Ativo & Verificado</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="senhaAtual">Senha Atual</label>
+                                    <input type="password" id="senhaAtual" name="senhaAtual" class="form-control" placeholder="••••••••">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="novaSenha">Nova Senha</label>
+                                    <input type="password" id="novaSenha" name="novaSenha" class="form-control" placeholder="Mínimo 8 caracteres">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Barra Fixa de Salvamento -->
+                        <div class="settings-sticky-footer">
+                            <button type="reset" class="btn-outline">
+                                Descartar Alterações
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Salvar Preferências
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Projeto - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans (ExtraBold/Black) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item active">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <a href="explorar.html" class="btn-outline btn-sm" title="Voltar à lista">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                    </a>
+                    <h1>Detalhes do Projeto</h1>
+                </div>
+                
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar talentos ou projetos...">
+                    </div>
+
+                    <a href="editais-eventos.html" class="icon-btn-badge" title="Notificações e Avisos">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot-alert"></span>
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Banner Hero Superior do Projeto -->
+            <section class="project-hero">
+                <div class="project-hero-top">
+                    <div class="project-badges">
+                        <span class="badge-category"><i class="fa-solid fa-seedling"></i> Extensão Universitária</span>
+                        <span class="status-badge bg-green"><i class="fa-solid fa-circle-check"></i> Vagas Abertas</span>
+                        <span class="badge-category"><i class="fa-solid fa-tag"></i> Edital 04/2026</span>
+                    </div>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-outline btn-sm" title="Favoritar Projeto">
+                            <i class="fa-regular fa-bookmark"></i> Salvar
+                        </button>
+                        <button class="btn-outline btn-sm" title="Compartilhar">
+                            <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                        </button>
+                    </div>
+                </div>
+
+                <h2 class="project-title-main">Estufa Semi-Hidropônica Integrada com IoT e Automação Solar</h2>
+                <p class="project-summary-text">
+                    Desenvolvimento e implantação de uma estufa sustentável com madeira tratada de eucalipto, equipada com sensores de umidade, temperatura e condutividade elétrica conectados por microcontroladores ESP32. O projeto busca fornecer tecnologia de baixo custo para horticultores familiares de Goiás.
+                </p>
+
+                <!-- Barra de Metadados do Projeto -->
+                <div class="project-meta-strip">
+                    <div class="meta-strip-item">
+                        <i class="fa-solid fa-user-tie"></i>
+                        <div>
+                            <small style="display:block;">Coordenador / Líder</small>
+                            <strong>Prof. Dr. Ricardo Albuquerque</strong>
+                        </div>
+                    </div>
+
+                    <div class="meta-strip-item">
+                        <i class="fa-solid fa-building-columns"></i>
+                        <div>
+                            <small style="display:block;">Câmpus UEG</small>
+                            <strong>CET - Anápolis (Ciências Exatas)</strong>
+                        </div>
+                    </div>
+
+                    <div class="meta-strip-item">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <div>
+                            <small style="display:block;">Oportunidades</small>
+                            <strong>3 Vagas Disponíveis</strong>
+                        </div>
+                    </div>
+
+                    <div class="meta-strip-item">
+                        <i class="fa-regular fa-calendar-days"></i>
+                        <div>
+                            <small style="display:block;">Vigência</small>
+                            <strong>Out/2026 - Out/2027 (12 meses)</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Layout em Duas Colunas -->
+            <div class="project-columns">
+                
+                <!-- Coluna Esquerda: Descrição Detalhada e Lista de Vagas Abertas -->
+                <div style="display: flex; flex-direction: column; gap: 25px;">
+                    
+                    <!-- Card: Sobre o Projeto -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 16px; color: var(--accent-color);">
+                            <i class="fa-solid fa-file-lines" style="color: var(--primary-color); margin-right: 8px;"></i>
+                            Sobre o Projeto & Metodologia
+                        </h3>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px;">
+                            A agricultura de precisão e os cultivos semi-hidropônicos representam um salto de produtividade e economia de água para o cerrado goiano. No entanto, o custo comercial dos sensores e sistemas automáticos de dosagem de nutrientes é inacessível para pequenos produtores.
+                        </p>
+                        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px;">
+                            Este projeto de extensão multidisciplinar une estudantes de <strong>Engenharia de Software</strong>, <strong>Sistemas de Informação</strong> e <strong>Agronomia</strong> para conceber um ecossistema completo: desde a estrutura física e painéis fotovoltaicos até o aplicativo web de telemetria e controle em tempo real.
+                        </p>
+
+                        <h4 style="font-size: 14px; color: var(--text-primary); margin-bottom: 10px;">Competências Aplicadas no Projeto:</h4>
+                        <div class="skills-container">
+                            <span class="skill-tag"><i class="fa-brands fa-java"></i> Java / Spring Boot</span>
+                            <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                            <span class="skill-tag"><i class="fa-solid fa-robot"></i> Arduino / ESP32</span>
+                            <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                            <span class="skill-tag"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+                            <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX Design</span>
+                        </div>
+                    </div>
+
+                    <!-- Card: Lista de Vagas Abertas -->
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <h3 style="color: var(--accent-color); margin-bottom: 4px;">
+                                    <i class="fa-solid fa-bullhorn" style="color: var(--primary-color); margin-right: 8px;"></i>
+                                    Vagas Abertas na Equipe
+                                </h3>
+                                <p class="subtitle" style="margin-bottom: 0;">Candidate-se de acordo com suas habilidades cadastradas no <span class="app-brand">TICO</span></p>
+                            </div>
+                            <span class="status-badge bg-green">3 Vagas Ativas</span>
+                        </div>
+
+                        <div class="vacancies-list">
+                            
+                            <!-- Vaga 1: Backend Developer -->
+                            <div class="vacancy-card">
+                                <div class="vacancy-header">
+                                    <div class="vacancy-title-area">
+                                        <h4>Desenvolvedor Backend (Java & Spring Boot)</h4>
+                                        <span class="vacancy-workload">
+                                            <i class="fa-solid fa-clock"></i> 12h semanais • Bolsa de Extensão UEG (R$ 700,00/mês)
+                                        </span>
+                                    </div>
+                                    <span class="status-badge bg-green">1 Vaga</span>
+                                </div>
+                                
+                                <p class="vacancy-desc">
+                                    Responsável pela criação das APIs REST em Spring Boot para receber telemetria dos microcontroladores ESP32, persistência em PostgreSQL e envio de alertas no Telegram/WhatsApp para os agricultores.
+                                </p>
+
+                                <div class="vacancy-footer">
+                                    <div class="skills-container" style="margin-top: 0;">
+                                        <span class="skill-tag"><i class="fa-brands fa-java"></i> Java</span>
+                                        <span class="skill-tag"><i class="fa-solid fa-gears"></i> Spring Boot</span>
+                                        <span class="skill-tag"><i class="fa-solid fa-database"></i> JPA / SQL</span>
+                                    </div>
+                                    
+                                    <a href="#modal-candidatura-vaga1" class="btn-primary btn-sm">
+                                        <i class="fa-solid fa-paper-plane"></i> Candidatar-se a esta Vaga
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Vaga 2: IoT e Hardware -->
+                            <div class="vacancy-card">
+                                <div class="vacancy-header">
+                                    <div class="vacancy-title-area">
+                                        <h4>Especialista em Sensores e Automação IoT</h4>
+                                        <span class="vacancy-workload">
+                                            <i class="fa-solid fa-clock"></i> 10h semanais • Voluntário com Certificado (120h)
+                                        </span>
+                                    </div>
+                                    <span class="status-badge bg-green">1 Vaga</span>
+                                </div>
+                                
+                                <p class="vacancy-desc">
+                                    Atuação na montagem de circuitos com microcontroladores ESP32, calibração de sensores de pH, condutividade e umidade do substrato, além do acionamento de válvulas solenoides para irrigação automatizada.
+                                </p>
+
+                                <div class="vacancy-footer">
+                                    <div class="skills-container" style="margin-top: 0;">
+                                        <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                                        <span class="skill-tag"><i class="fa-solid fa-robot"></i> ESP32 / C++</span>
+                                        <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Manejo Agrícola</span>
+                                    </div>
+                                    
+                                    <a href="#modal-candidatura-vaga2" class="btn-primary btn-sm">
+                                        <i class="fa-solid fa-paper-plane"></i> Candidatar-se a esta Vaga
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Vaga 3: UI/UX e Frontend -->
+                            <div class="vacancy-card">
+                                <div class="vacancy-header">
+                                    <div class="vacancy-title-area">
+                                        <h4>Designer de Interface (UI/UX) & Frontend</h4>
+                                        <span class="vacancy-workload">
+                                            <i class="fa-solid fa-clock"></i> 8h semanais • Bolsa Inovação UEG
+                                        </span>
+                                    </div>
+                                    <span class="status-badge bg-green">1 Vaga</span>
+                                </div>
+                                
+                                <p class="vacancy-desc">
+                                    Desenvolvimento dos dashboards visuais simplificados no Figma e codificação dos templates HTML/CSS para que produtores rurais consigam acompanhar seus tanques hidropônicos pelo celular.
+                                </p>
+
+                                <div class="vacancy-footer">
+                                    <div class="skills-container" style="margin-top: 0;">
+                                        <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX Design</span>
+                                        <span class="skill-tag"><i class="fa-brands fa-figma"></i> Figma</span>
+                                        <span class="skill-tag"><i class="fa-brands fa-html5"></i> HTML/CSS</span>
+                                    </div>
+                                    
+                                    <a href="#modal-candidatura-vaga3" class="btn-primary btn-sm">
+                                        <i class="fa-solid fa-paper-plane"></i> Candidatar-se a esta Vaga
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Coluna Direita: Membros Atuais da Equipe e Documentos -->
+                <div style="display: flex; flex-direction: column; gap: 25px;">
+                    
+                    <!-- Card: Membros da Equipe -->
+                    <div class="card">
+                        <h3 style="color: var(--accent-color); margin-bottom: 4px;">
+                            <i class="fa-solid fa-users" style="color: var(--primary-color); margin-right: 8px;"></i>
+                            Equipe Atual
+                        </h3>
+                        <p class="subtitle">Integrantes já alocados neste projeto</p>
+
+                        <div class="team-list">
+                            
+                            <!-- Membro 1: Coordenador -->
+                            <div class="team-member">
+                                <img src="https://ui-avatars.com/api/?name=Ricardo+Albuquerque&background=182229&color=fff&size=80" alt="Prof. Ricardo">
+                                <div class="team-member-info">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <strong>Prof. Dr. Ricardo Albuquerque</strong>
+                                        <span class="team-role-badge">Orientador</span>
+                                    </div>
+                                    <small>Docente • Câmpus Central Anápolis</small>
+                                </div>
+                            </div>
+
+                            <!-- Membro 2: Gabriel de Moura -->
+                            <div class="team-member">
+                                <img src="https://ui-avatars.com/api/?name=Gabriel+de+Moura&background=D46A4F&color=fff&size=80" alt="Gabriel de Moura">
+                                <div class="team-member-info">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <strong>Gabriel de Moura</strong>
+                                        <span class="team-role-badge" style="background-color: var(--primary-color);">Líder Discente</span>
+                                    </div>
+                                    <small>Engenharia de Software • 6º Período</small>
+                                </div>
+                            </div>
+
+                            <!-- Membro 3: Kawic Brito -->
+                            <div class="team-member">
+                                <img src="https://ui-avatars.com/api/?name=Kawic+Brito&background=388E3C&color=fff&size=80" alt="Kawic Brito">
+                                <div class="team-member-info">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <strong>Kawic Araújo Brito</strong>
+                                        <span class="team-role-badge" style="background-color: var(--status-open);">Pesquisador</span>
+                                    </div>
+                                    <small>Sistemas de Informação • 4º Período</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Card: Documentos e Links -->
+                    <div class="card">
+                        <h3 style="color: var(--accent-color); margin-bottom: 14px;">
+                            <i class="fa-solid fa-folder-open" style="color: var(--primary-color); margin-right: 8px;"></i>
+                            Arquivos do Projeto
+                        </h3>
+                        
+                        <ul style="list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                            <li style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg-main); border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-file-pdf" style="color: var(--status-closed); font-size: 16px;"></i>
+                                    <span>Edital_Extensao_UEG_2026.pdf</span>
+                                </div>
+                                <a href="#" style="color: var(--primary-color);"><i class="fa-solid fa-download"></i></a>
+                            </li>
+
+                            <li style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: var(--bg-main); border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-file-lines" style="color: var(--accent-color); font-size: 16px;"></i>
+                                    <span>Plano_de_Trabalho_Estufa.pdf</span>
+                                </div>
+                                <a href="#" style="color: var(--primary-color);"><i class="fa-solid fa-download"></i></a>
+                            </li>
+                        </ul>
+
+                        <button class="btn-outline btn-block" onclick="alert('Link do projeto copiado para a área de transferência!')">
+                            <i class="fa-regular fa-copy"></i> Copiar Link de Divulgação
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL DE CANDIDATURA 1 (Backend) - Puro HTML e CSS (:target) -->
+    <div id="modal-candidatura-vaga1" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Candidatar-se à Vaga</h3>
+                <a href="#" class="modal-close" title="Fechar modal"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+
+            <form action="perfil.html" method="GET">
+                <div class="modal-body">
+                    <div class="modal-job-summary">
+                        <strong style="font-size: 14px; color: var(--accent-color); display: block;">Vaga: Desenvolvedor Backend (Java & Spring Boot)</strong>
+                        <span style="font-size: 12px; color: var(--text-secondary);">Projeto: Estufa Semi-Hidropônica Integrada • UEG Anápolis</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Candidato:</label>
+                        <input type="text" class="form-control" value="Gabriel de Moura (gabriel.moura@ueg.br)" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Suas Habilidades Compatíveis:</label>
+                        <div class="skills-container" style="margin-top: 0;">
+                            <span class="skill-tag" style="background-color: var(--primary-color); color: #fff;"><i class="fa-brands fa-java" style="color:#fff;"></i> Java / Spring Boot</span>
+                            <span class="skill-tag" style="background-color: var(--primary-color); color: #fff;"><i class="fa-solid fa-database" style="color:#fff;"></i> SQL / JPA</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="motivo1">Mensagem de Apresentação / Motivação: <span class="required">*</span></label>
+                        <textarea id="motivo1" class="form-textarea" placeholder="Descreva brevemente por que você tem interesse em participar deste projeto e qual sua experiência com as tecnologias solicitadas..." required></textarea>
+                    </div>
+
+                    <div class="signup-terms" style="margin: 0;">
+                        <input type="checkbox" id="disp1" required checked>
+                        <label for="disp1">Declaro que tenho disponibilidade para cumprir as 12 horas semanais exigidas para esta vaga.</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn-outline">Cancelar</a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Confirmar Candidatura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CANDIDATURA 2 (IoT) -->
+    <div id="modal-candidatura-vaga2" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Candidatar-se à Vaga</h3>
+                <a href="#" class="modal-close" title="Fechar modal"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+
+            <form action="perfil.html" method="GET">
+                <div class="modal-body">
+                    <div class="modal-job-summary">
+                        <strong style="font-size: 14px; color: var(--accent-color); display: block;">Vaga: Especialista em Sensores e Automação IoT</strong>
+                        <span style="font-size: 12px; color: var(--text-secondary);">Projeto: Estufa Semi-Hidropônica Integrada • UEG Anápolis</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Candidato:</label>
+                        <input type="text" class="form-control" value="Gabriel de Moura (gabriel.moura@ueg.br)" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="motivo2">Mensagem de Apresentação: <span class="required">*</span></label>
+                        <textarea id="motivo2" class="form-textarea" placeholder="Explique seu interesse e experiências práticas com circuitos e sensores..." required></textarea>
+                    </div>
+
+                    <div class="signup-terms" style="margin: 0;">
+                        <input type="checkbox" id="disp2" required checked>
+                        <label for="disp2">Declaro disponibilidade de 10h semanais para atuação no laboratório.</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn-outline">Cancelar</a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Confirmar Candidatura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CANDIDATURA 3 (UI/UX) -->
+    <div id="modal-candidatura-vaga3" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Candidatar-se à Vaga</h3>
+                <a href="#" class="modal-close" title="Fechar modal"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+
+            <form action="perfil.html" method="GET">
+                <div class="modal-body">
+                    <div class="modal-job-summary">
+                        <strong style="font-size: 14px; color: var(--accent-color); display: block;">Vaga: Designer UI/UX & Frontend</strong>
+                        <span style="font-size: 12px; color: var(--text-secondary);">Projeto: Estufa Semi-Hidropônica Integrada • UEG Anápolis</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="motivo3">Link de Portfólio / Motivação: <span class="required">*</span></label>
+                        <textarea id="motivo3" class="form-textarea" placeholder="Insira link do Figma, Behance, GitHub ou descreva sua experiência com design e interfaces..." required></textarea>
+                    </div>
+
+                    <div class="signup-terms" style="margin: 0;">
+                        <input type="checkbox" id="disp3" required checked>
+                        <label for="disp3">Declaro disponibilidade de 8h semanais para criação de protótipos e interfaces.</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn-outline">Cancelar</a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Confirmar Candidatura
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

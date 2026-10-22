@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil - TICO</title>
-    <!-- Fonte Inter para um visual limpo e moderno -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Meu Perfil - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -13,36 +15,46 @@
 <body>
 
     <div class="dashboard-container">
-        <!-- Sidebar Esquerda -->
+        
+        <!-- Sidebar Esquerda Unificada -->
         <aside class="sidebar">
             <div class="logo">
-                <h2>TICO</h2>
+                <h2 class="app-brand">TICO</h2>
             </div>
             
             <nav class="menu">
-                <a href="#" class="menu-item active">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item active">
                     <i class="fa-regular fa-user"></i>
                     <span>Meu Perfil</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-layer-group"></i> Meus Projetos <span class="badge-count">3</span>
+                <a href="explorar.html" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-check-double"></i> Concluídos <span class="badge-count">1</span>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-regular fa-calendar"></i> Eventos <span class="badge-count">2</span>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-medal"></i> Conquistas
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
                 </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-regular fa-comments"></i> Mensagens <span class="badge-count">1</span>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
                 </a>
             </nav>
 
             <div class="mascot-placeholder">
-                <!-- Aqui entrará a logo do pássaro tico-tico no futuro -->
                 <i class="fa-solid fa-dove"></i>
             </div>
         </aside>
@@ -50,15 +62,38 @@
         <!-- Conteúdo Principal -->
         <main class="main-content">
             
-            <!-- Barra Superior -->
+            <!-- Barra Superior (Topbar) -->
             <header class="topbar">
-                <h1>Perfil</h1>
+                <div>
+                    <h1>Meu Perfil Acadêmico</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Visualize seus dados institucionais, histórico de equipes e competências cadastradas.</p>
+                </div>
+                
                 <div class="topbar-actions">
                     <div class="search-box">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" placeholder="Buscar talentos ou projetos...">
                     </div>
-                    <button class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+
+                    <a href="editais-eventos.html" class="icon-btn-badge" title="Notificações e Avisos">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot-alert"></span>
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuario.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuario.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuario.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
                 </div>
             </header>
 
@@ -67,89 +102,128 @@
                 
                 <!-- Card 1: Informações do Usuário -->
                 <div class="card profile-card">
-                    <button class="edit-btn"><i class="fa-regular fa-pen-to-square"></i></button>
+                    <a href="configuracoes.html" class="edit-btn" title="Editar Informações nas Configurações">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>
+                    
                     <div class="profile-header">
                         <div class="avatar">
-                            <img src="https://ui-avatars.com/api/?name=U+S&background=D46A4F&color=fff&size=120" alt="Avatar do Usuário">
+                            <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=120" 
+                                 th:src="${usuario.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=120'" 
+                                 alt="Avatar do Usuário">
                         </div>
                         <div class="profile-info">
-                            <h2 id="user-name">Gabriel de Moura</h2>
-                            <span id="user-role">Desenvolver Fullstack</span>
-                            <p class="subtitle">Universidade Estadual de Goiás - UEG</p>
+                            <h2 id="user-name" th:text="${usuario.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</h2>
+                            <span id="user-role" th:text="${usuario.cargo} ?: 'Desenvolvedor Fullstack | Eng. de Software'">Desenvolvedor Fullstack | Eng. de Software</span>
+                            <p class="subtitle" th:text="${usuario.instituicao} ?: 'Universidade Estadual de Goiás - UEG'">Universidade Estadual de Goiás - UEG</p>
                             
                             <ul class="info-list">
-                                <li><strong>Ingresso no GAIO:</strong> Outubro de 2026</li>
-                                <li><strong>Especialidade:</strong> Engenharia de Software</li>
-                                <li><strong>Localização:</strong> Pires do Rio, GO</li>
-                                <li><strong>Email:</strong> contato.academico@ueg.br</li>
+                                <li><strong>Ingresso no GAIO:</strong> <span th:text="${usuario.dataIngresso} ?: 'Outubro de 2026'">Outubro de 2026</span></li>
+                                <li><strong>Especialidade:</strong> <span th:text="${usuario.especialidade} ?: 'Engenharia de Software & IoT'">Engenharia de Software & IoT</span></li>
+                                <li><strong>Câmpus / Unidade:</strong> <span th:text="${usuario.campus} ?: 'Pires do Rio, GO'">Pires do Rio, GO</span></li>
+                                <li><strong>Email Oficial:</strong> <span th:text="${usuario.email} ?: 'gabriel.moura@ueg.br'">gabriel.moura@ueg.br</span></li>
                             </ul>
 
                             <div class="social-links">
-                                <a href="#"><i class="fa-brands fa-github"></i></a>
-                                <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                                <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                                <a href="https://github.com" th:href="${usuario.githubUrl} ?: 'https://github.com'" target="_blank"><i class="fa-brands fa-github"></i></a>
+                                <a href="https://linkedin.com" th:href="${usuario.linkedinUrl} ?: 'https://linkedin.com'" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                                <a href="http://lattes.cnpq.br" th:href="${usuario.lattesUrl} ?: 'http://lattes.cnpq.br'" target="_blank" title="Currículo Lattes"><i class="fa-solid fa-graduation-cap"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Habilidades (Adaptado do card de Pagamento) -->
+                <!-- Card 2: Habilidades Cadastradas -->
                 <div class="card skills-card">
-                    <h3>Minhas Habilidades</h3>
-                    <p class="subtitle">Tags de pareamento em projetos</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h3>Minhas Habilidades</h3>
+                            <p class="subtitle">Tags de pareamento automático em projetos</p>
+                        </div>
+                        <a href="configuracoes.html" style="font-size: 12px; color: var(--primary-color); text-decoration: none; font-weight: 600;">+ Gerenciar</a>
+                    </div>
                     
                     <div class="skills-container">
-                        <span class="skill-tag"><i class="fa-brands fa-java"></i> Java / Spring Boot</span>
-                        <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
-                        <span class="skill-tag"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</span>
-                        <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                        <!-- Iteração Thymeleaf com fallback -->
+                        <span class="skill-tag" th:each="hab : ${usuario.habilidades}">
+                            <i class="fa-solid fa-tag"></i> <span th:text="${hab.nome}">Tag</span>
+                        </span>
+                        
+                        <!-- Fallback visual para visualização estática -->
+                        <span class="skill-tag" th:if="${usuario == null or usuario.habilidades == null}"><i class="fa-brands fa-java"></i> Java / Spring Boot</span>
+                        <span class="skill-tag" th:if="${usuario == null or usuario.habilidades == null}"><i class="fa-solid fa-microchip"></i> Eletrônica / IoT</span>
+                        <span class="skill-tag" th:if="${usuario == null or usuario.habilidades == null}"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+                        <span class="skill-tag" th:if="${usuario == null or usuario.habilidades == null}"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</span>
+                        <span class="skill-tag" th:if="${usuario == null or usuario.habilidades == null}"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
                     </div>
                 </div>
 
-                <!-- Card 3: Histórico de Projetos (Adaptado da Timeline de Cursos) -->
+                <!-- Card 3: Histórico de Projetos -->
                 <div class="card projects-card">
-                    <h3>Meus Projetos</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 0;">Meus Projetos & Equipes</h3>
+                        <a href="criar-projeto.html" class="btn-primary btn-sm">
+                            <i class="fa-solid fa-plus"></i> Novo Projeto
+                        </a>
+                    </div>
                     
                     <div class="timeline">
-                        <!-- Projeto 1 -->
+                        <!-- Projeto 1 (Completado) -->
                         <div class="timeline-item item-light-green">
                             <div class="timeline-dot dot-green"></div>
                             <div class="timeline-content">
                                 <div class="item-header">
-                                    <h4>Estufa Semi-Hidropônica Integrada</h4>
-                                    <span class="status-badge bg-green">Concluído</span>
+                                    <h4 th:text="${projetoConcluido.titulo} ?: 'Estufa Semi-Hidropônica Integrada'">Estufa Semi-Hidropônica Integrada</h4>
+                                    <span class="status-badge bg-green" th:text="${projetoConcluido.status} ?: 'Concluído'">Concluído</span>
                                 </div>
-                                <p>Estruturação de eucalipto e monitoramento de solo e irrigação.</p>
-                                <span class="meta-info">Equipe de 3 pessoas</span>
+                                <p th:text="${projetoConcluido.descricao} ?: 'Estruturação em eucalipto tratado e telemetria de solo e irrigação automatizada.'">
+                                    Estruturação em eucalipto tratado e telemetria de solo e irrigação automatizada.
+                                </p>
+                                <span class="meta-info">Equipe de 3 pessoas • Bolsista PIBIC</span>
                             </div>
-                            <button class="action-btn"><i class="fa-solid fa-arrow-right"></i></button>
+                            <a href="projeto-detalhes.html" class="action-btn" title="Ver detalhes do projeto" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
 
-                        <!-- Projeto 2 -->
+                        <!-- Projeto 2 (Em Andamento) -->
                         <div class="timeline-item item-light-orange">
                             <div class="timeline-dot dot-orange"></div>
                             <div class="timeline-content">
                                 <div class="item-header">
-                                    <h4>Módulo TICO - Plataforma GAIO</h4>
+                                    <h4>Módulo <span class="app-brand">TICO</span> - Plataforma GAIO</h4>
                                     <span class="status-badge bg-orange">Em andamento</span>
                                 </div>
-                                <p>Desenvolvimento da arquitetura MVC com Thymeleaf e Spring Data JPA.</p>
-                                <span class="meta-info">Parceria com Kawic</span>
+                                <p>Desenvolvimento da arquitetura MVC com Spring Boot, Thymeleaf e sistema de matching de competências.</p>
+                                <span class="meta-info">Parceria com Kawic • 2 Vagas Abertas</span>
                             </div>
-                            <button class="action-btn"><i class="fa-solid fa-arrow-right"></i></button>
+                            <a href="projeto-detalhes.html" class="action-btn" title="Ver detalhes do projeto" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 4: Destaque / Mural (Adaptado do card Escuro de Assinatura) -->
+                <!-- Card 4: Destaque / Mural da Comunidade -->
                 <div class="card dark-card">
-                    <h3>Avisos da Comunidade</h3>
+                    <h3>Avisos da Comunidade GAIO</h3>
                     <ul class="features-list">
-                        <li><strong>Reunião de Alinhamento:</strong> Nova interface do TICO aprovada.</li>
-                        <li><strong>Vaga Aberta:</strong> Projeto de automação no Telegram busca desenvolvedor Node.js.</li>
-                        <li><strong>Dica:</strong> Mantenha suas tags de habilidades atualizadas para receber convites.</li>
+                        <li th:each="aviso : ${avisosComunidade}">
+                            <strong th:text="${aviso.titulo}">Título do Aviso</strong> <span th:text="${aviso.conteudo}">Conteúdo</span>
+                        </li>
+                        <li th:if="${avisosComunidade == null}">
+                            <strong>Edital PIBIC:</strong> Faltam 5 dias para o encerramento das inscrições de equipes.
+                        </li>
+                        <li th:if="${avisosComunidade == null}">
+                            <strong>Nova Vaga:</strong> Projeto de Automação no Câmpus Pires do Rio busca aluno com Python/OpenCV.
+                        </li>
+                        <li th:if="${avisosComunidade == null}">
+                            <strong>Dica TICO:</strong> Mantenha suas tags de habilidades sempre atualizadas para aparecer no topo das buscas.
+                        </li>
                     </ul>
-                    <button class="btn-primary-inverse">Buscar Novas Equipes</button>
+                    <a href="explorar.html" class="btn-primary-inverse" style="display: block; text-align: center; text-decoration: none;">
+                        Buscar Novas Equipes
+                    </a>
                 </div>
 
             </div>

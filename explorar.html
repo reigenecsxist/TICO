@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Projetos & Talentos - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans (ExtraBold/Black) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item active">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div>
+                    <h1>Explorar Oportunidades</h1>
+                    <p class="subtitle" style="margin-bottom: 0;">Encontre projetos acadêmicos com vagas ou descubra colaboradores com as habilidades certas.</p>
+                </div>
+                
+                <div class="topbar-actions">
+                    <a href="criar-projeto.html" class="btn-primary btn-sm">
+                        <i class="fa-solid fa-plus"></i> Publicar Projeto
+                    </a>
+
+                    <a href="editais-eventos.html" class="icon-btn-badge" title="Notificações e Avisos">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot-alert"></span>
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Sistema de Abas Alternáveis (CSS Puro via Radio Buttons) -->
+            <input type="radio" name="explore-tab" id="tab-projetos" class="tab-radio-control" checked>
+            <input type="radio" name="explore-tab" id="tab-talentos" class="tab-radio-control">
+
+            <!-- Navegação de Abas -->
+            <div class="tabs-navigation">
+                <label for="tab-projetos" class="tab-nav-item">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>Buscar Projetos</span>
+                    <span class="badge-tag-count">6 Abertos</span>
+                </label>
+                <label for="tab-talentos" class="tab-nav-item">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                    <span>Buscar Talentos</span>
+                    <span class="badge-tag-count">6 Disponíveis</span>
+                </label>
+            </div>
+
+            <!-- Barra de Busca e Filtros Rápidos (Compartilhada) -->
+            <div class="filter-bar">
+                <form class="filter-form" action="#" method="GET">
+                    
+                    <div class="filter-search-input">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Palavra-chave (ex: Java, IoT, Hidroponia, Agro...)">
+                    </div>
+
+                    <div>
+                        <select class="form-select" style="padding: 10px 14px; font-size: 13px; background-color: var(--bg-main);">
+                            <option value="">Todos os Cursos / Áreas</option>
+                            <option value="eng-software">Engenharia de Software</option>
+                            <option value="sistemas-info">Sistemas de Informação</option>
+                            <option value="agronomia">Agronomia</option>
+                            <option value="farmacia">Farmácia</option>
+                            <option value="eng-civil">Engenharia Civil</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <select class="form-select" style="padding: 10px 14px; font-size: 13px; background-color: var(--bg-main);">
+                            <option value="">Todos os Câmpus UEG</option>
+                            <option value="anapolis">Anápolis (CET)</option>
+                            <option value="pires-do-rio">Pires do Rio</option>
+                            <option value="goiania">Goiânia / Cora Coralina</option>
+                            <option value="morrinhos">Morrinhos</option>
+                            <option value="itumbiara">Itumbiara</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="padding: 10px 18px;">
+                        <i class="fa-solid fa-filter"></i> Filtrar
+                    </button>
+                </form>
+
+                <!-- Pílulas de Filtro Rápido por Habilidade -->
+                <div class="quick-filter-pills">
+                    <span>Habilidades em alta:</span>
+                    <a href="#" class="quick-pill active">Todas</a>
+                    <a href="#" class="quick-pill">Java / Spring</a>
+                    <a href="#" class="quick-pill">Eletrônica / ESP32</a>
+                    <a href="#" class="quick-pill">Hidroponia</a>
+                    <a href="#" class="quick-pill">UI/UX Design</a>
+                    <a href="#" class="quick-pill">Python</a>
+                    <a href="#" class="quick-pill">Soldagem MIG</a>
+                    <a href="#" class="quick-pill">SQL / Postgres</a>
+                </div>
+            </div>
+
+            <!-- ================= PAINEL 1: VITRINE DE PROJETOS ================= -->
+            <div id="painel-projetos">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; color: var(--accent-color);">
+                        Projetos com Vagas de Pareamento Abertas
+                    </h3>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Exibindo 6 projetos</span>
+                </div>
+
+                <div class="cards-grid">
+                    
+                    <!-- Projeto 1 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-seedling"></i> Extensão</span>
+                                <span class="status-badge bg-green">3 Vagas</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Estufa Semi-Hidropônica Integrada com IoT e Automação Solar</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Estruturação de estufa com monitoramento de umidade, condutividade e temperatura via ESP32 para agricultores familiares.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-brands fa-java"></i> Java</span>
+                                <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                                <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Ricardo+Albuquerque&background=182229&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Prof. Ricardo A.</strong>
+                                    <small>UEG Anápolis (CET)</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 2 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-lightbulb"></i> Inovação</span>
+                                <span class="status-badge bg-green">2 Vagas</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Módulo <span class="app-brand">TICO</span> - Conexão de Habilidades na Plataforma GAIO</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Rede interna para matching e recomendação inteligente de talentos universitários usando arquitetura Spring Boot e Thymeleaf.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-brands fa-java"></i> Spring Boot</span>
+                                <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX</span>
+                                <span class="skill-tag"><i class="fa-solid fa-database"></i> JPA</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Gabriel de Moura</strong>
+                                    <small>Engenharia de Software</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 3 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-microscope"></i> PIBIC</span>
+                                <span class="status-badge bg-green">1 Vaga</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Drone de Pulverização Autônomo para Pequenas Propriedades</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Pesquisa aplicada no controle de pragas usando visão computacional embarcada em drones de baixo custo.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-brands fa-python"></i> Python</span>
+                                <span class="skill-tag"><i class="fa-solid fa-robot"></i> Arduino</span>
+                                <span class="skill-tag"><i class="fa-solid fa-eye"></i> Visão Comp.</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Amanda+Souza&background=203545&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Profa. Me. Amanda Souza</strong>
+                                    <small>UEG Pires do Rio</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 4 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-graduation-cap"></i> TCC</span>
+                                <span class="status-badge bg-yellow">2 Vagas (Análise)</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Rastreabilidade da Cadeia da Carne Goiana via Blockchain</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Sistema de certificação de sustentabilidade e boas práticas de manejo pecuário com contratos inteligentes.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-solid fa-link"></i> Blockchain</span>
+                                <span class="skill-tag"><i class="fa-brands fa-node-js"></i> Node.js</span>
+                                <span class="skill-tag"><i class="fa-solid fa-cow"></i> Zootecnia</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Lucas+Silveira&background=388E3C&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Lucas Silveira</strong>
+                                    <small>Sistemas de Informação</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-outline btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 5 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-seedling"></i> Extensão</span>
+                                <span class="status-badge bg-green">3 Vagas</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Biorreator Automatizado para Produção de Biofertilizantes</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Controle automatizado de temperatura e aeração na fermentação anaeróbica de resíduos orgânicos da agroindústria.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-solid fa-flask"></i> Química</span>
+                                <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                                <span class="skill-tag"><i class="fa-solid fa-fire-burner"></i> Soldagem</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Beatriz+Mendes&background=D46A4F&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Dra. Beatriz Mendes</strong>
+                                    <small>UEG Morrinhos</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Projeto 6 -->
+                    <div class="project-card-item">
+                        <div>
+                            <div class="project-card-header">
+                                <span class="badge-category"><i class="fa-solid fa-universal-access"></i> Inovação Social</span>
+                                <span class="status-badge bg-green">2 Vagas</span>
+                            </div>
+
+                            <h4 class="project-card-title">
+                                <a href="projeto-detalhes.html">Central Digital de Acessibilidade em Libras para o GAIO</a>
+                            </h4>
+                            
+                            <p class="project-card-desc">
+                                Criação de recursos acessíveis e tutoriais audiovisuais em Libras para alunos surdos utilizarem os sistemas da UEG.
+                            </p>
+
+                            <div class="project-card-skills">
+                                <span class="skill-tag"><i class="fa-solid fa-hands-asl-interpreting"></i> Libras</span>
+                                <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX</span>
+                                <span class="skill-tag"><i class="fa-solid fa-video"></i> Edição de Vídeo</span>
+                            </div>
+                        </div>
+
+                        <div class="project-card-footer">
+                            <div class="project-leader-info">
+                                <img src="https://ui-avatars.com/api/?name=Carlos+Eduardo&background=182229&color=fff&size=68" alt="Líder">
+                                <div>
+                                    <strong>Prof. Carlos Eduardo</strong>
+                                    <small>UEG Goiânia</small>
+                                </div>
+                            </div>
+                            <a href="projeto-detalhes.html" class="btn-primary btn-sm">
+                                Ver Vagas <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= PAINEL 2: BANCO DE TALENTOS ================= -->
+            <div id="painel-talentos">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; color: var(--accent-color);">
+                        Estudantes e Pesquisadores com Habilidades Cadastradas
+                    </h3>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Exibindo 6 talentos</span>
+                </div>
+
+                <div class="cards-grid">
+                    
+                    <!-- Talento 1 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Gabriel+de+Moura&background=D46A4F&color=fff&size=120" alt="Gabriel" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível para novos projetos"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Gabriel de Moura</h4>
+                                <span class="talent-course">Engenharia de Software</span>
+                                <span class="talent-campus">CET - Anápolis • 6º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Desenvolvedor Fullstack com foco em ecossistema Spring Boot, arquitetura MVC com Thymeleaf e automação de serviços.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-brands fa-java"></i> Java</span>
+                            <span class="skill-tag"><i class="fa-solid fa-gears"></i> Spring Boot</span>
+                            <span class="skill-tag"><i class="fa-solid fa-database"></i> SQL</span>
+                            <span class="skill-tag"><i class="fa-solid fa-microchip"></i> Eletrônica</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Talento 2 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Kawic+Brito&background=182229&color=fff&size=120" alt="Kawic" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Kawic Araújo Brito</h4>
+                                <span class="talent-course">Sistemas de Informação</span>
+                                <span class="talent-campus">UnU Pires do Rio • 4º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Especialista em levantamento de requisitos, prototipagem ágil e desenvolvimento frontend com CSS moderno e acessível.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-brands fa-html5"></i> HTML5/CSS3</span>
+                            <span class="skill-tag"><i class="fa-solid fa-list-check"></i> Scrum</span>
+                            <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX</span>
+                            <span class="skill-tag"><i class="fa-brands fa-git-alt"></i> Git</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Talento 3 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Larissa+Nogueira&background=388E3C&color=fff&size=120" alt="Larissa" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Larissa Nogueira</h4>
+                                <span class="talent-course">Agronomia</span>
+                                <span class="talent-campus">UnU Morrinhos • 7º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Pesquisa em hidroponia fechada, controle nutricional de soluções aquosas e biofertilizantes sustentáveis para hortaliças.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-solid fa-leaf"></i> Hidroponia</span>
+                            <span class="skill-tag"><i class="fa-solid fa-flask"></i> Soluções Nutritivas</span>
+                            <span class="skill-tag"><i class="fa-solid fa-seedling"></i> Manejo Integrado</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Talento 4 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Matheus+Fernandes&background=D99C41&color=fff&size=120" alt="Matheus" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Matheus Fernandes</h4>
+                                <span class="talent-course">Engenharia Civil</span>
+                                <span class="talent-campus">CET - Anápolis • 8º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Experiência em soldagem estrutural MIG, cálculo de cargas em estufas e galpões agrícolas e modelagem 3D em AutoCAD.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</span>
+                            <span class="skill-tag"><i class="fa-solid fa-compass-drafting"></i> AutoCAD</span>
+                            <span class="skill-tag"><i class="fa-solid fa-trowel-bricks"></i> Estruturas</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Talento 5 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Beatriz+Alcantara&background=203545&color=fff&size=120" alt="Beatriz" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Beatriz Alcântara</h4>
+                                <span class="talent-course">Design & Comunicação</span>
+                                <span class="talent-campus">Câmpus Goiânia • 5º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Designer de produtos digitais, focada em design systems, testes de usabilidade, protótipos de alta fidelidade e acessibilidade.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-solid fa-palette"></i> UI/UX Design</span>
+                            <span class="skill-tag"><i class="fa-brands fa-figma"></i> Figma</span>
+                            <span class="skill-tag"><i class="fa-solid fa-universal-access"></i> Acessibilidade</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Talento 6 -->
+                    <div class="talent-card-item">
+                        <div class="talent-header">
+                            <div class="talent-avatar-wrapper">
+                                <img src="https://ui-avatars.com/api/?name=Rodrigo+Santana&background=BC4B4B&color=fff&size=120" alt="Rodrigo" class="talent-avatar">
+                                <span class="talent-status-dot" title="Disponível"></span>
+                            </div>
+                            <div class="talent-details">
+                                <h4>Rodrigo Santana</h4>
+                                <span class="talent-course">Sistemas de Informação</span>
+                                <span class="talent-campus">UnU Itumbiara • 6º Período</span>
+                            </div>
+                        </div>
+
+                        <p class="talent-bio">
+                            Entusiasta de IoT e Ciência de Dados. Experiência na programação de firmware para microcontroladores ESP32 e modelos em Python.
+                        </p>
+
+                        <div class="skills-container" style="margin-top: 0; margin-bottom: 16px;">
+                            <span class="skill-tag"><i class="fa-brands fa-python"></i> Python</span>
+                            <span class="skill-tag"><i class="fa-solid fa-microchip"></i> ESP32 / C++</span>
+                            <span class="skill-tag"><i class="fa-solid fa-chart-line"></i> Análise de Dados</span>
+                        </div>
+
+                        <div class="talent-footer">
+                            <a href="perfil.html" class="btn-outline btn-sm" style="flex: 1;">
+                                <i class="fa-regular fa-user"></i> Ver Perfil
+                            </a>
+                            <a href="#modal-convite-talento" class="btn-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-paper-plane"></i> Convidar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL DE CONVITE PARA PROJETO (CSS PURO :target) -->
+    <div id="modal-convite-talento" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Convidar Talento para o Projeto</h3>
+                <a href="#" class="modal-close" title="Fechar modal"><i class="fa-solid fa-xmark"></i></a>
+            </div>
+
+            <form action="explorar.html" method="GET">
+                <div class="modal-body">
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                        Envie um convite oficial direto pelo <span class="app-brand">TICO</span>. O estudante receberá a notificação em seu mural acadêmico e e-mail institucional.
+                    </p>
+
+                    <div class="form-group">
+                        <label class="form-label" for="meuProjeto">Selecione seu Projeto: <span class="required">*</span></label>
+                        <select id="meuProjeto" class="form-select" required>
+                            <option value="estufa" selected>Estufa Semi-Hidropônica Integrada com IoT e Automação Solar</option>
+                            <option value="tico">Módulo TICO - Plataforma GAIO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="vagaDestinada">Vaga Destinada: <span class="required">*</span></label>
+                        <select id="vagaDestinada" class="form-select" required>
+                            <option value="vaga1">Desenvolvedor Backend (Java & Spring Boot)</option>
+                            <option value="vaga2">Especialista em Sensores e Automação IoT</option>
+                            <option value="vaga3">Designer de Interface (UI/UX)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="mensagemConvite">Mensagem de Convite: <span class="required">*</span></label>
+                        <textarea id="mensagemConvite" class="form-textarea" placeholder="Olá! Vimos suas tags de habilidades no TICO e gostaríamos de te convidar para compor nossa equipe neste projeto..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn-outline">Cancelar</a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Enviar Convite
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

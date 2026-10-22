@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Novo Projeto - TICO</title>
+    <!-- Fontes Google: Inter e Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
+    <!-- Ícones FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Sidebar Esquerda Unificada -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 class="app-brand">TICO</h2>
+            </div>
+            
+            <nav class="menu">
+                <a href="feed.html" class="menu-item">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Feed Inicial</span>
+                </a>
+                <a href="perfil.html" class="menu-item">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Meu Perfil</span>
+                </a>
+                <a href="explorar.html" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Explorar Projetos</span>
+                </a>
+                <a href="criar-projeto.html" class="menu-item active">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Criar Projeto</span>
+                </a>
+                <a href="talentos.html" class="menu-item">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Banco de Talentos</span>
+                </a>
+                <a href="editais-eventos.html" class="menu-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span>Editais & Eventos</span>
+                    <span class="badge-count" th:text="${totalEditaisAbertos} ?: '3'">3</span>
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="mascot-placeholder">
+                <i class="fa-solid fa-dove"></i>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Barra Superior (Topbar) -->
+            <header class="topbar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <a href="explorar.html" class="btn-outline btn-sm" title="Voltar à lista">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                    </a>
+                    <h1>Cadastrar Novo Projeto</h1>
+                </div>
+                
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Buscar talentos ou projetos...">
+                    </div>
+
+                    <a href="editais-eventos.html" class="icon-btn-badge" title="Notificações e Avisos">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="dot-alert"></span>
+                    </a>
+
+                    <!-- User Pill no Topo -->
+                    <a href="perfil.html" class="topbar-user-badge">
+                        <img src="https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80" 
+                             th:src="${usuarioLogado.avatarUrl} ?: 'https://ui-avatars.com/api/?name=Gabriel+Moura&background=D46A4F&color=fff&size=80'" 
+                             alt="Avatar">
+                        <div class="topbar-user-info">
+                            <strong th:text="${usuarioLogado.nome} ?: 'Gabriel de Moura'">Gabriel de Moura</strong>
+                            <small th:text="${usuarioLogado.campus} ?: 'UEG Pires do Rio'">UEG Pires do Rio</small>
+                        </div>
+                    </a>
+
+                    <a href="login.html" class="logout-btn" title="Terminar Sessão">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Card Centralizado do Formulário -->
+            <div class="create-project-wrapper">
+                <div class="form-card">
+                    
+                    <div style="margin-bottom: 24px;">
+                        <span class="badge-featured" style="margin-bottom: 10px;">Alocação de Talentos UEG</span>
+                        <h2 style="font-size: 24px; color: var(--accent-color); margin-bottom: 6px;">Publique sua Iniciativa</h2>
+                        <p class="subtitle" style="margin-bottom: 0;">Defina o escopo do projeto e as tags de habilidades que sua equipe precisa. O <span class="app-brand">TICO</span> fará o match automático com os estudantes cadastrados.</p>
+                    </div>
+
+                    <!-- Formulário com Notações Thymeleaf -->
+                    <form action="explorar.html" th:action="@{/projetos/salvar}" th:object="${projeto}" method="POST">
+                        
+                        <!-- SEÇÃO 1: Dados Gerais do Projeto -->
+                        <div class="form-section-divider" style="margin-top: 10px;">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <h3>1. Identificação Geral</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="titulo">
+                                Título do Projeto <span class="required">*</span>
+                            </label>
+                            <input type="text" id="titulo" name="titulo" th:field="*{titulo}" class="form-control" placeholder="Ex: Sistema de Telemetria e Monitoramento de Solo para Agricultura Familiar" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="categoria">
+                                    Categoria do Projeto <span class="required">*</span>
+                                </label>
+                                <select id="categoria" name="categoria" th:field="*{categoria}" class="form-select" required>
+                                    <option value="" disabled selected>Selecione a categoria</option>
+                                    <option value="extensao">Projeto de Extensão Universitária</option>
+                                    <option value="pibic">Iniciação Científica (PIBIC / PIBITI)</option>
+                                    <option value="tcc">Trabalho de Conclusão de Curso (TCC)</option>
+                                    <option value="integrador">Projeto Integrador Multidisciplinar</option>
+                                    <option value="inovacao">Inovação Tecnológica / Startup Acadêmica</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="campus">
+                                    Câmpus / Unidade UEG <span class="required">*</span>
+                                </label>
+                                <select id="campus" name="campus" th:field="*{campus}" class="form-select" required>
+                                    <option value="" disabled selected>Selecione a unidade</option>
+                                    <option value="anapolis">Câmpus Central - CET (Anápolis)</option>
+                                    <option value="pires-do-rio">UnU Pires do Rio</option>
+                                    <option value="goiania">Câmpus Cora Coralina / Goiânia</option>
+                                    <option value="itumbiara">UnU Itumbiara</option>
+                                    <option value="ipameri">UnU Ipameri</option>
+                                    <option value="morrinhos">UnU Morrinhos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="resumo">
+                                Resumo Executivo <span class="required">*</span>
+                            </label>
+                            <input type="text" id="resumo" name="resumo" th:field="*{resumo}" class="form-control" placeholder="Breve síntese de 1 a 2 frases para exibição nos cards da vitrine..." maxlength="180" required>
+                            <span class="form-hint">Máximo de 180 caracteres. Esse texto aparece no feed de busca rápida.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="descricao">
+                                Descrição Completa e Objetivos <span class="required">*</span>
+                            </label>
+                            <textarea id="descricao" name="descricao" th:field="*{descricao}" class="form-textarea" rows="5" placeholder="Detalhe a justificativa do projeto, os desafios propostos, a metodologia a ser adotada e os resultados esperados pela equipe..." required></textarea>
+                        </div>
+
+                        <!-- SEÇÃO 2: Habilidades Necessárias (Tags de Pareamento) -->
+                        <div class="form-section-divider">
+                            <i class="fa-solid fa-tags"></i>
+                            <h3>2. Habilidades que a Equipe Precisa</h3>
+                        </div>
+
+                        <p class="form-hint" style="margin-bottom: 12px;">
+                            Marque as competências que você busca nos candidatos. Alunos com essas tags cadastradas receberão recomendação prioritária deste projeto.
+                        </p>
+
+                        <div class="tag-selector-container">
+                            
+                            <span class="tag-category-title"><i class="fa-solid fa-code"></i> Programação & Dados</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-java" name="requiredSkills" value="Java / Spring Boot" checked>
+                                    <label for="skill-java" class="tag-choice-label"><i class="fa-brands fa-java"></i> Java / Spring Boot</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-python" name="requiredSkills" value="Python">
+                                    <label for="skill-python" class="tag-choice-label"><i class="fa-brands fa-python"></i> Python</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-sql" name="requiredSkills" value="SQL / Bancos de Dados">
+                                    <label for="skill-sql" class="tag-choice-label"><i class="fa-solid fa-database"></i> SQL / Postgres</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-web" name="requiredSkills" value="HTML5 & CSS3">
+                                    <label for="skill-web" class="tag-choice-label"><i class="fa-brands fa-html5"></i> HTML5 & CSS3</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-api" name="requiredSkills" value="APIs REST">
+                                    <label for="skill-api" class="tag-choice-label"><i class="fa-solid fa-network-wired"></i> APIs REST</label>
+                                </div>
+                            </div>
+
+                            <span class="tag-category-title"><i class="fa-solid fa-microchip"></i> Engenharia & Automação</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-eletronica" name="requiredSkills" value="Eletrônica">
+                                    <label for="skill-eletronica" class="tag-choice-label"><i class="fa-solid fa-microchip"></i> Eletrônica</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-arduino" name="requiredSkills" value="Arduino / ESP32">
+                                    <label for="skill-arduino" class="tag-choice-label"><i class="fa-solid fa-robot"></i> Arduino / ESP32</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-soldagem" name="requiredSkills" value="Soldagem MIG">
+                                    <label for="skill-soldagem" class="tag-choice-label"><i class="fa-solid fa-fire-burner"></i> Soldagem MIG</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-hidroponia" name="requiredSkills" value="Hidroponia">
+                                    <label for="skill-hidroponia" class="tag-choice-label"><i class="fa-solid fa-leaf"></i> Hidroponia</label>
+                                </div>
+                            </div>
+
+                            <span class="tag-category-title"><i class="fa-solid fa-palette"></i> Design, Gestão & Comunicação</span>
+                            <div class="tag-options-grid">
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-uiux" name="requiredSkills" value="UI/UX Design">
+                                    <label for="skill-uiux" class="tag-choice-label"><i class="fa-solid fa-palette"></i> UI/UX Design</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-figma" name="requiredSkills" value="Figma">
+                                    <label for="skill-figma" class="tag-choice-label"><i class="fa-brands fa-figma"></i> Figma</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-gestao" name="requiredSkills" value="Gestão de Projetos">
+                                    <label for="skill-gestao" class="tag-choice-label"><i class="fa-solid fa-list-check"></i> Gestão de Projetos</label>
+                                </div>
+                                <div class="tag-choice">
+                                    <input type="checkbox" id="skill-escrita" name="requiredSkills" value="Escrita Científica">
+                                    <label for="skill-escrita" class="tag-choice-label"><i class="fa-solid fa-book-open"></i> Escrita Científica</label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- SEÇÃO 3: Configuração das Vagas -->
+                        <div class="form-section-divider">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <h3>3. Vagas Iniciais e Vínculo</h3>
+                        </div>
+
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label class="form-label" for="numVagas">Quantidade de Vagas</label>
+                                <input type="number" id="numVagas" name="numVagas" th:field="*{numVagas}" class="form-control" value="2" min="1" max="10" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="tipoVinculo">Tipo de Vínculo</label>
+                                <select id="tipoVinculo" name="tipoVinculo" th:field="*{tipoVinculo}" class="form-select" required>
+                                    <option value="bolsa">Bolsa Remunerada UEG (PIBIC / FAPEG)</option>
+                                    <option value="voluntario" selected>Voluntário (Horas Complementares)</option>
+                                    <option value="creditos">Créditos de Extensão Curricular</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="cargaHoraria">Carga Semanal Estimada</label>
+                                <select id="cargaHoraria" name="cargaHoraria" th:field="*{cargaHoraria}" class="form-select" required>
+                                    <option value="8h">8 horas semanais</option>
+                                    <option value="12h" selected>12 horas semanais</option>
+                                    <option value="20h">20 horas semanais</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="form-actions">
+                            <a href="explorar.html" class="btn-outline">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-rocket"></i> Publicar Projeto no <span class="app-brand">TICO</span>
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

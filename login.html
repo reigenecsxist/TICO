@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sessão - TICO</title>
-    <!-- Fonte Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fontes Google: Inter e Nunito Sans (ExtraBold/Black) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,800;0,6..12,900;1,6..12,800;1,6..12,900&display=swap" rel="stylesheet">
     <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -19,15 +21,15 @@
             <div class="login-card-left">
                 <div class="featured-project-overlay">
                     <span class="badge-featured">Projeto em Destaque</span>
-                    <h3>Módulo TICO</h3>
-                    <p>Alocação inteligente de talentos e conexão de equipes.   </p>
+                    <h3>Módulo <span class="app-brand">TICO</span></h3>
+                    <p>Alocação inteligente de talentos e conexão de equipes na Universidade Estadual de Goiás.</p>
                     
                     <div class="featured-footer">
                         <div class="author-info">
                             <img src="https://ui-avatars.com/api/?name=Kawic+UEG&background=D46A4F&color=fff&size=80" alt="Autor">
                             <div>
                                 <strong>Kawic Araújo Brito</strong>
-                                <small>@ueg_tico</small>
+                                <small>@ueg_tico • Ecossistema GAIO</small>
                             </div>
                         </div>
                         <div class="carousel-dots">
@@ -42,17 +44,25 @@
             <!-- Lado Direito: Formulário de Início de Sessão -->
             <div class="login-card-right">
                 <div class="login-header">
-                    <h2>TICO</h2>
+                    <h2 class="app-brand">TICO</h2>
                     <p class="subtitle">Insira seus dados para entrar na plataforma</p>
                 </div>
 
-                <form class="login-form">
+                <!-- Mensagens Dinâmicas de Erro ou Logout via Thymeleaf -->
+                <div th:if="${param.error}" style="background: rgba(188,75,75,0.1); border: 1px solid var(--status-closed); color: var(--status-closed); padding: 10px; border-radius: 10px; font-size: 12.5px; margin-bottom: 16px; text-align: center;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> E-mail ou senha incorretos.
+                </div>
+                <div th:if="${param.logout}" style="background: rgba(56,142,60,0.1); border: 1px solid var(--status-open); color: var(--status-open); padding: 10px; border-radius: 10px; font-size: 12.5px; margin-bottom: 16px; text-align: center;">
+                    <i class="fa-solid fa-circle-check"></i> Você encerrou sua sessão com sucesso.
+                </div>
+
+                <form class="login-form" action="feed.html" th:action="@{/login}" method="POST">
                     <div class="input-group">
-                        <input type="text" placeholder="E-mail institucional ou utilizador" required>
+                        <input type="text" name="username" placeholder="E-mail institucional (@ueg.br) ou utilizador" required>
                     </div>
 
                     <div class="input-group password-group">
-                        <input type="password" id="passwordInput" placeholder="Palavra-passe" required>
+                        <input type="password" id="passwordInput" name="password" placeholder="Palavra-passe" required>
                         <i class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
                     </div>
 
@@ -67,7 +77,7 @@
                     <span>ou</span>
                 </div>
 
-                <button class="btn-sso-ueg">
+                <button class="btn-sso-ueg" onclick="window.location.href='feed.html'">
                     <i class="fa-solid fa-graduation-cap"></i> Entrar com a Conta UEG
                 </button>
 
@@ -78,5 +88,21 @@
 
         </div>
     </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.querySelector('.toggle-password');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>
